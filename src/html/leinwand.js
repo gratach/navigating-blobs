@@ -1,3 +1,7 @@
+/**
+ * Provides an fullscreen canvas that adds itself to the html body.
+ * Accepts a Zeichnung as argument that states what should be drawn in the canvas. 
+ */
 export class Leinwand{
 	constructor(zeichnung){
 		this.zeichnung = zeichnung;

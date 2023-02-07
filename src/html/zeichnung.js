@@ -1,3 +1,6 @@
+/*
+ * Provides some type of drawing that can be applyed to Leinwand classes.
+ */
 export class Zeichnung{
 	constructor(){
 		this.ebenen = [];

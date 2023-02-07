@@ -1,5 +1,8 @@
 import {Leinwand} from "./html/leinwand.js";
 import {Zeichnung} from "./html/zeichnung.js";
+/*
+ * Simple Programm to draw a rectangle with text on a resizeble fullscreen canvas.
+ */
 var z = new Zeichnung();
 z.ebenen.push(
 	(ctx, w, h) => {
