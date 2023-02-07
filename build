@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+webpack
+rm www/main.js
+cp dist/main.js www
