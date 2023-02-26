@@ -1,10 +1,11 @@
 /**
  * Provides an fullscreen canvas that adds itself to the html body.
- * Accepts a Zeichnung as argument that states what should be drawn in the canvas. 
+ * Accepts a drawing as argument that states what should be drawn in the canvas. 
  */
 export class Leinwand{
-	constructor(zeichnung){
-		this.zeichnung = zeichnung;
+	constructor(drawing){
+		this.drawing = drawing;
+		this.drawing.set_leinwand(this);
 		
 		this.styles = document.createElement("style");
 		this.styles.innerText = `
@@ -21,13 +22,32 @@ export class Leinwand{
 		this.canvas.style.width = "100%";
 		this.canvas.style.height = "100%";
 		this.context = this.canvas.getContext("2d")
-		let erneuere = ()=>{
-			this.canvas.width = window.innerWidth;
-			this.canvas.height = window.innerHeight;
-			this.zeichnung.male(this);
+		let skaliere = ()=>{
+			this.width = window.innerWidth;
+			this.canvas.width = this.width;
+			this.height = window.innerHeight;
+			this.canvas.height = this.height;
+			this.refresh();
 		};
-		window.document.body.onresize = erneuere;
+		this.todonew = false;
+		window.document.body.onresize = skaliere;
 		window.document.body.appendChild(this.canvas);
-		erneuere();
+		skaliere();
+	}
+	/*
+	 * To be called when the drawing has changed and neads to be refreshed.
+	 */
+	refresh(){
+		if(!this.todonew){
+			this.todonew = true;
+			window.requestAnimationFrame((zeit)=>this.frame(zeit));
+		}
+	}
+	/*
+	 * Do not call this function directly
+	 */
+	frame(zeit){
+		this.todonew = false;
+		this.drawing.draw(this, zeit);
 	}
 }
