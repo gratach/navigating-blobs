@@ -36,5 +36,8 @@ export class Herde{
 		for(let x of this.partikels){
 			x.draw(leinwand, zeit);
 		}
+		for(let x of this.links){
+			x.draw(leinwand, zeit);
+		}
 	}
 }
