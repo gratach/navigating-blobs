@@ -5,6 +5,7 @@ import {Partikel} from "./anzeige/partikel.js";
  * Simple Programm to create some blobs and draw them to a canvas.
  */
 var p = new Partikel(0, 0, "Hallo");
+var p = new Partikel(500, 500, "Hi");
 var h = new Herde([p]);
 // z.ebenen.push(
 // 	(ctx, w, h, zeit) => {
