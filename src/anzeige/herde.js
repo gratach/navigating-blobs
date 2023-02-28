@@ -6,18 +6,30 @@ export class Herde{
 	 * Creates new herde from array of partikels and arrow links between them.
 	 * The Leinwand and dynamik needs to be specified later.
 	 */
-	constructor(partikels = [], links = []){
+	constructor(partikels, links, dynamik){
 		this.partikels = partikels;
 		this.links = links;
+		for(let x of this.partikels){
+			x.set_herde(this);
+		}
+		for(let x of this.links){
+			x.set_herde(this);
+		}
+		this.lineWidth = 4;
+		this.yStretch = 0.7;
 		this.todonew = false;
 		this.leinwand = null;
-		this.dynamik = null;
+		this.dynamik = dynamik;
+		dynamik.set_herde(this);
+	}
+	get width(){
+		return this.leinwand.width
+	}
+	get height(){
+		return this.leinwand.height
 	}
 	set_leinwand(leinwand){
 		this.leinwand = leinwand;
-	}
-	set_dynamik(dynamik){
-		this.dynamik = dynamik;
 	}
 	/*
 	 * To be called when the apperance of blobs and arrows have changed.
@@ -33,6 +45,7 @@ export class Herde{
 	 */
 	draw(leinwand, zeit){
 		this.todonew = false;
+		this.dynamik.rearange()
 		for(let x of this.partikels){
 			x.draw(leinwand, zeit);
 		}

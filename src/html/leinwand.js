@@ -34,6 +34,7 @@ export class Leinwand{
 		window.document.body.appendChild(this.canvas);
 		skaliere();
 	}
+	
 	/*
 	 * To be called when the drawing has changed and neads to be refreshed.
 	 */
@@ -48,6 +49,7 @@ export class Leinwand{
 	 */
 	frame(zeit){
 		this.todonew = false;
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 		this.drawing.draw(this, zeit);
 	}
 }
