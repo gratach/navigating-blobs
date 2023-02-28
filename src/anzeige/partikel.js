@@ -11,6 +11,7 @@ export class Partikel{
 		this.scale = 1;
 		this.bufferWidth = 200;
 		this.canvas = null;
+		this.connections = new Set();
 	}
 	set_herde(herde){
 		this.herde = herde;
@@ -93,5 +94,22 @@ export class Partikel{
 		neighborsY = neighbor.y + (this.y - neighbor.y) * toCut;
 		
 		return [[thisX, thisY], [neighborsX, neighborsY]]
+	}
+	
+	/*
+	 * Dont call this directly
+	 */
+	addConnection(connection){
+		this.connections.add(connection)
+	}
+	
+	/*
+	 * Returns whether this partikel is connected to an other partikel by an pfeil
+	 */
+	connectedWith(neighbor){
+		for(let connection of this.connections)
+			if(connection.from === neighbor || connection.to === neighbor)
+				return true
+		return false
 	}
 }

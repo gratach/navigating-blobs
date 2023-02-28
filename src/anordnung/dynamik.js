@@ -11,6 +11,13 @@ export class Dynamik{
 			let rawReturn = [ - xDistance * strength / squareDistance,  - yDistance * strength / squareDistance]
 			return rawReturn
 		};
+		this.connectionPotential = (xDistance, yDistance) => {
+			let squareDistance = xDistance * xDistance + yDistance * yDistance;
+			let strength = 100;
+			let formula = strength / squareDistance - 0.01;
+			let rawReturn = [ - xDistance * formula,  - yDistance * formula]
+			return rawReturn
+		};
 	}
 	rearange(){
 		if(this.movement.length != this.herde.partikels.length)
@@ -32,7 +39,7 @@ export class Dynamik{
 				let partikel1 = this.herde.partikels[i];
 				let partikel2 = this.herde.partikels[j];
 				let [[x1, y1], [x2, y2]] = partikel1.closestPoints(partikel2)
-				let [xPush, yPush] = this.partikelPotential(x2 - x1, y2 - y1);
+				let [xPush, yPush] = partikel1.connectedWith(partikel2) ? this.connectionPotential(x2 - x1, y2 - y1) : this.partikelPotential(x2 - x1, y2 - y1);
 				this.movement[i][0] += xPush;
 				this.movement[i][1] += yPush;
 				this.movement[j][0] -= xPush;
@@ -44,7 +51,6 @@ export class Dynamik{
 		let keepGoing = false;
 		// Shift partikel position
 		for(var i = 0; i < this.movement.length; i++){
-			console.log(this.movement[i][0], this.movement[i][1])
 			let partikel = this.herde.partikels[i];
 			partikel.x += this.movement[i][0];
 			partikel.y += this.movement[i][1];

@@ -2,6 +2,7 @@ export class Pfeil{
 	constructor(von, zu){
 		this.from = von;
 		this.to = zu;
+		this.from.addConnection(this)
 	}
 	draw(leinwand, zeit){
 		var ctx = leinwand.context;
