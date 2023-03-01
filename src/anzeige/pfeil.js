@@ -18,4 +18,7 @@ export class Pfeil{
 	set_herde(herde){
 		this.herde = herde;
 	}
+	handleMouse(e){
+		
+	}
 }

@@ -20,6 +20,8 @@ export class Herde{
 		this.todonew = false;
 		this.leinwand = null;
 		this.dynamik = dynamik;
+		this.noMouse = {"x" : null, "y" : null}
+		this.mousePosition = this.noMouse
 		dynamik.set_herde(this);
 	}
 	get width(){
@@ -46,11 +48,26 @@ export class Herde{
 	draw(leinwand, zeit){
 		this.todonew = false;
 		this.dynamik.rearange()
+		this.handleMouse()
 		for(let x of this.partikels){
 			x.draw(leinwand, zeit);
 		}
 		for(let x of this.links){
 			x.draw(leinwand, zeit);
+		}
+	}
+	
+	mouseMove(e){
+		this.mousePosition = e
+		this.handleMouse()
+	}
+	
+	handleMouse(){
+		for(let x of this.partikels){
+			x.handleMouse(this.mousePosition);
+		}
+		for(let x of this.links){
+			x.handleMouse(this.mousePosition);
 		}
 	}
 }

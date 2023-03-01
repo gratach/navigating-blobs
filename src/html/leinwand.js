@@ -29,6 +29,14 @@ export class Leinwand{
 			this.canvas.height = this.height;
 			this.refresh();
 		};
+		let mousemove = (e)=>{
+			let rect = this.canvas.getBoundingClientRect();
+			this.drawing.mouseMove({
+				"x" : (e.clientX - rect.left) * this.canvas.width / rect.width,
+				"y" : (e.clientY - rect.top) * this.canvas.height / rect.height
+			})
+		}
+		this.canvas.onmousemove = mousemove;
 		this.todonew = false;
 		window.document.body.onresize = skaliere;
 		window.document.body.appendChild(this.canvas);

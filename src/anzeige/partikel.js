@@ -12,6 +12,7 @@ export class Partikel{
 		this.bufferWidth = 200;
 		this.canvas = null;
 		this.connections = new Set();
+		this.hover = false;
 	}
 	set_herde(herde){
 		this.herde = herde;
@@ -21,9 +22,9 @@ export class Partikel{
 	 * To be called when the apperance of the partikel has changed.
 	 */
 	refresh(){
-		if(!this.todonew && this.leinwand != null){
+		if(!this.todonew && this.herde != null){
 			this.todonew = true;
-			this.leinwand.refresh();
+			this.herde.refresh();
 		}
 	}
 	get bufferHeight(){
@@ -50,13 +51,14 @@ export class Partikel{
 			
 			// Draw elipse to buffer
 			this.context.lineWidth = this.herde.lineWidth;
-			this.context.fillStyle = "rgb(255,0,0)";
+			this.context.fillStyle = this.hover ? "rgb(0,255,0)" : "rgb(100,100,255)";
 			this.context.beginPath();
 			this.context.ellipse(this.canvas.width / 2, this.canvas.height / 2, (this.canvas.width - this.context.lineWidth) / 2, (this.canvas.height - this.context.lineWidth) / 2, 0, 0, 2 * Math.PI);
+			this.context.fill();
 			this.context.stroke();
 			
 			// Draw text to buffer
-			this.context.fillStyle = "rgb(255,0,0)";
+			this.context.fillStyle = "rgb(0,0,0)";
 			// Rescale text
 			this.context.font = 100 + "px serif";
 			var textSize = this.context.measureText(this.text);
@@ -111,5 +113,20 @@ export class Partikel{
 			if(connection.from === neighbor || connection.to === neighbor)
 				return true
 		return false
+	}
+	
+	handleMouse(e){
+		let inside;
+		if(e.x === null)
+			inside = false;
+		else{
+			let relativeX = (e.x - this.x) * 2 / this.width;
+			let relativeY = (e.y - this.y) * 2 / this.height;
+			inside = relativeX * relativeX + relativeY * relativeY < 1;
+		}
+		if(inside != this.hover){
+			this.refresh()
+		}
+		this.hover = inside;
 	}
 }
