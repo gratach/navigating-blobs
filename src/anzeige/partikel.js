@@ -51,6 +51,17 @@ export class Partikel{
 			this.coming = false;
 			this.going = true;
 			this.animationStartTime = performance.now();
+			this.refresh();
+		}
+	}
+	appear(){
+		if(!this.visible || this.going){
+			console.log("appear");
+			this.coming = true;
+			this.going = false
+			this.visible = true;
+			this.animationStartTime = performance.now();
+			this.refresh();
 		}
 	}
 	draw(leinwand, time){
@@ -124,22 +135,41 @@ export class Partikel{
 	/*
 	 * return the two closest points of the elipse of this partikel and of one choosen neighbor
 	 */
-	closestPoints(neighbor){
+	closestPoints(neighbor, minimalDistance = 0){
+		
+		// Get distance of particle centers
+		x = this.x - neighbor.x;
+		y = this.y - neighbor.y;
+		let centerDistance = Math.sqrt(x * x + y * y);
+		
+		//Extract case of identical positions
+		if(centerDistance == 0)
+			return [[this.x - minimalDistance / 2, this.y], [this.x + minimalDistance / 2, this.y]];
+		
 		// Find relative part of link line to cut at the this end
 		var x = (neighbor.x - this.x) / (this.width / 2);
 		var y = (neighbor.y - this.y) / (this.height / 2);
 		var fromCut =  1 / Math.sqrt(x * x + y * y);
+		if(isNaN(fromCut))
+			fromCut = 0;
 		
 		// Find relative part of link line to cut at the neigbours end
 		x = (this.x - neighbor.x) / (neighbor.width / 2);
 		y = (this.y - neighbor.y) / (neighbor.height / 2);
 		var toCut =  1 / Math.sqrt(x * x + y * y);
+		if(isNaN(toCut))
+			toCut = 0;
 		
+		// handle case of overlapping particles
+		let overlap = toCut + fromCut - 1 + minimalDistance / centerDistance;
+		if(overlap > 0){
+			[fromCut, toCut] = [fromCut - overlap / 2, toCut - overlap / 2];
+		}
+		
+		// construct return value
 		var thisX, thisY, neighborsX, neighborsY;
-		
 		thisX = this.x + (neighbor.x - this.x) * fromCut;
 		thisY = this.y + (neighbor.y - this.y) * fromCut;
-		
 		neighborsX = neighbor.x + (this.x - neighbor.x) * toCut;
 		neighborsY = neighbor.y + (this.y - neighbor.y) * toCut;
 		

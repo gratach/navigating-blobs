@@ -56,7 +56,20 @@ export class Pfeil{
 				ctx.fill()
 			}
 			
-			if(this.from.visible && this.to.visible){
+			if(!this.from.visible){
+				if(this.to.visible && this.toSatelite != null){
+					[this.from.x, this.from.y] = [satX, satY];
+					console.log("setzeauf", satX, satY);
+				}
+					
+			}
+			else if(!this.to.visible){
+				if(this.from.visible && this.fromSatelite != null){
+					[this.to.x, this.to.y] = [satX, satY];
+					console.log("setzeauf", satX, satY);
+				}
+			}
+			else{
 				ctx.moveTo(fromX, fromY);
 				ctx.lineTo(toX, toY);
 				ctx.stroke();

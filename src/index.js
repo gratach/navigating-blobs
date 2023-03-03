@@ -7,7 +7,7 @@ import {Dynamik} from "./anordnung/dynamik.js"
  * Simple Programm to create some blobs and draw them to a canvas.
  */
 var p1 = new Partikel(100, 100, "Hallo, Das");
-var p2 = new Partikel(100, 300, "ist ein");
+var p2 = new Partikel(100, 100, "ist ein");
 var p3 = new Partikel(100, 600, "Test");
 var p4 = new Partikel(500, 100, "und");
 var p5 = new Partikel(500, 300, "er");
@@ -15,8 +15,9 @@ var p6 = new Partikel(500, 600, "geht");
 var p7 = new Partikel(900, 100, "noch");
 var p8 = new Partikel(900, 300, "weiter?");
 var p9 = new Partikel(900, 600, "weiter!");
-p8.vanish()
-p9.vanish()
+p8.vanish();
+p9.vanish();
+setTimeout(()=>{p8.appear()}, 1500);
 var l1 = new Pfeil(p1, p2);
 var l2 = new Pfeil(p2, p3);
 var l3 = new Pfeil(p3, p4);
