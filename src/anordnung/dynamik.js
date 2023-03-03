@@ -40,9 +40,7 @@ export class Dynamik{
 			for(let j = i + 1; j < this.movement.length; j++){
 				let partikel1 = this.herde.partikels[i];
 				let partikel2 = this.herde.partikels[j];
-				if(isNaN(partikel1.x*partikel1.y*partikel2.y)||isNaN(partikel2.x)) console.log("coo")
 				let [[x1, y1], [x2, y2]] = partikel1.closestPoints(partikel2, 1)
-				if(isNaN(x1*x2*y1*y2)) console.log("con")
 				let [xPush, yPush] = partikel1.connectedWith(partikel2) ? this.connectionPotential(x2 - x1, y2 - y1, partikel1.scale * partikel2.scale) : this.partikelPotential(x2 - x1, y2 - y1, partikel1.scale * partikel2.scale);
 				this.movement[i][0] += xPush;
 				this.movement[i][1] += yPush;

@@ -57,17 +57,23 @@ export class Herde{
 		this.frameNumber += 1;
 	}
 	
-	mouseMove(e){
-		this.mousePosition = e
-		this.handleMouse()
+	mouseEvent(e){
+		this.mousePosition = [e.x, e.y]
+		this.handleMouse(e.klick, e.doubleklick)
 	}
 	
-	handleMouse(){
+	handleMouse(klick = false, doubleklick = false){
+		let e = {
+			x : this.mousePosition[0],
+			y : this.mousePosition[1],
+			klick : klick,
+			doubleklick : doubleklick
+		}
 		for(let x of this.partikels){
-			x.handleMouse(this.mousePosition);
+			x.handleMouse(e);
 		}
 		for(let x of this.links){
-			x.handleMouse(this.mousePosition);
+			x.handleMouse(e);
 		}
 	}
 }

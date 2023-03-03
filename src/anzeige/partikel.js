@@ -23,6 +23,8 @@ export class Partikel{
 		this.animationDuration = 1000;
 		
 		this.satelites = []
+		
+		this.marked = false;
 	}
 	set_herde(herde){
 		this.herde = herde;
@@ -56,7 +58,6 @@ export class Partikel{
 	}
 	appear(){
 		if(!this.visible || this.going){
-			console.log("appear");
 			this.coming = true;
 			this.going = false
 			this.visible = true;
@@ -109,6 +110,7 @@ export class Partikel{
 				this.context.beginPath();
 				this.context.ellipse(this.canvas.width / 2, this.canvas.height / 2, (this.canvas.width - this.context.lineWidth) / 2, (this.canvas.height - this.context.lineWidth) / 2, 0, 0, 2 * Math.PI);
 				this.context.fill();
+				this.context.strokeStyle = this.marked ? "rgb(255,0,0)" : "rgb(0,0,0)"
 				this.context.stroke();
 				
 				// Draw text to buffer
@@ -204,6 +206,13 @@ export class Partikel{
 			let relativeX = (e.x - this.x) * 2 / this.width;
 			let relativeY = (e.y - this.y) * 2 / this.height;
 			inside = relativeX * relativeX + relativeY * relativeY < 1;
+		}
+		if(inside){
+			if(e.klick){
+				this.marked = !this.marked;
+				console.log(this.marked)
+				this.refresh()
+			}
 		}
 		if(inside != this.hover){
 			this.refresh()
