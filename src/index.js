@@ -13,7 +13,10 @@ var p4 = new Partikel(500, 100, "und");
 var p5 = new Partikel(500, 300, "er");
 var p6 = new Partikel(500, 600, "geht");
 var p7 = new Partikel(900, 100, "noch");
-var p8 = new Partikel(900, 300, "weiter");
+var p8 = new Partikel(900, 300, "weiter?");
+var p9 = new Partikel(900, 600, "weiter!");
+p8.vanish()
+p9.vanish()
 var l1 = new Pfeil(p1, p2);
 var l2 = new Pfeil(p2, p3);
 var l3 = new Pfeil(p3, p4);
@@ -21,8 +24,9 @@ var l4 = new Pfeil(p4, p5);
 var l5 = new Pfeil(p5, p6);
 var l6 = new Pfeil(p6, p7);
 var l7 = new Pfeil(p7, p8);
+var l8 = new Pfeil(p7, p9);
 var d  = new Dynamik()
-var h = new Herde([p1, p2, p3, p4, p5, p6, p7, p8], [l1, l2, l3, l4, l5, l6, l7], d);
+var h = new Herde([p1, p2, p3, p4, p5, p6, p7, p8, p9], [l1, l2, l3, l4, l5, l6, l7, l8], d);
 // z.ebenen.push(
 // 	(ctx, w, h, zeit) => {
 // 		ctx.fillRect(w / 3, h / 3, w / 3, h / 3);
