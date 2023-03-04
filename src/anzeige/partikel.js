@@ -4,7 +4,7 @@ export class Partikel{
 	/*
 	 * Creates some text bubble
 	 */
-	constructor(x, y, text){
+	constructor(herde, x, y, text){
 		this.todonew = true;
 		
 		this.text = text;
@@ -16,7 +16,7 @@ export class Partikel{
 		this.connections = new Set();
 		this.hover = false;
 		
-		this.visible = true;
+		this.visible = false;
 		this.coming = false;
 		this.going = false;
 		this.animationStartTime = performance.now()
@@ -25,8 +25,7 @@ export class Partikel{
 		this.satelites = []
 		
 		this.marked = false;
-	}
-	set_herde(herde){
+		
 		this.herde = herde;
 		this.refresh();
 	}
@@ -53,47 +52,55 @@ export class Partikel{
 			this.coming = false;
 			this.going = true;
 			this.animationStartTime = performance.now();
-			this.refresh();
+			this.herde.refresh();
 		}
 	}
 	appear(){
 		if(!this.visible || this.going){
+			if(!this.visible){
+				this.herde.addParticle(this)
+			}
 			this.coming = true;
 			this.going = false
 			this.visible = true;
 			this.animationStartTime = performance.now();
-			this.refresh();
+			this.herde.refresh();
 		}
 	}
 	draw(leinwand, time){
+		if(this.visible){
+			// Handle the coming or going animation scale change
+			if(this.coming){
+				this.scale = (time - this.animationStartTime) / this.animationDuration;
+				if(this.scale >= 1){
+					this.coming = false;
+					this.scale = 1
+				}
+				else
+					this.herde.refresh() // Continue animation
+			}
+			else if(this.going){
+				this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
+				// Hide particle and remove from herde if going animation is complete
+				if(this.scale <= 0){
+					this.going = false;
+					this.visible = false;
+					this.scale = 0;
+					this.herde.removeParticle()
+				}
+				else
+					this.herde.refresh() // Continue animation
+			}
+			else 
+				this.scale = 1;
+		}
+				
 		// Draw text bubble to buffer if necessary
 		if(this.todonew){
 			this.todonew = false;
 			
 			if(this.visible){
 				
-				// Handle the coming or going animation scale change
-				if(this.coming){
-					this.scale = (time - this.animationStartTime) / this.animationDuration;
-					if(this.scale >= 1){
-						this.coming = false;
-						this.scale = 1
-					}
-					else
-						this.refresh() // Continue animation
-				}
-				else if(this.going){
-					this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
-					if(this.scale <= 0){
-						this.going = false;
-						this.visible = false;
-						this.scale = 0;
-					}
-					else
-						this.refresh() // Continue animation
-				}
-				else
-					this.scale = 1;
 		
 				// Create buffer if necessary
 				if(this.canvas == null || this.canvas.width != this.bufferWidth || this.canvas.height != this.bufferHeight){
@@ -210,7 +217,6 @@ export class Partikel{
 		if(inside){
 			if(e.klick){
 				this.marked = !this.marked;
-				console.log(this.marked)
 				this.refresh()
 			}
 		}

@@ -2,6 +2,7 @@ export class Pfeil{
 	constructor(von, zu){
 		this.from = von;
 		this.to = zu;
+		this.herde = von.herde;
 		this.from.addConnection(this);
 		this.fromSatelite = null;
 		this.toSatelite = null;

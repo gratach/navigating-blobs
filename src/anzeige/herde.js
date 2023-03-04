@@ -6,15 +6,9 @@ export class Herde{
 	 * Creates new herde from array of partikels and arrow links between them.
 	 * The Leinwand and dynamik needs to be specified later.
 	 */
-	constructor(partikels, links, dynamik){
-		this.partikels = partikels;
-		this.links = links;
-		for(let x of this.partikels){
-			x.set_herde(this);
-		}
-		for(let x of this.links){
-			x.set_herde(this);
-		}
+	constructor( dynamik){
+		this.partikels = [];
+		this.links = [];
 		this.lineWidth = 4;
 		this.sateliteWidth = 30;
 		this.yStretch = 0.7;
@@ -24,7 +18,21 @@ export class Herde{
 		this.noMouse = {"x" : null, "y" : null}
 		this.mousePosition = this.noMouse
 		this.frameNumber = 0;
+		
+		this.focusedParticels = []
+		this.mainFocus = null;
 		dynamik.set_herde(this);
+	}
+	setFocus(particle, main = false){
+		if(this.focusedParticels.indexOf(particle) == -1){
+			particle.focused = true;
+			this.focusedParticels.push(particle)
+		}
+		if(main){
+			this.mainFocus.mainFocus = false;
+			this.mainFocus = particle;
+			this.mainFocus.mainFocus = true;
+		}
 	}
 	get width(){
 		return this.leinwand.width
@@ -35,6 +43,18 @@ export class Herde{
 	set_leinwand(leinwand){
 		this.leinwand = leinwand;
 	}
+	addParticle(particle){
+		if(this.partikels.indexOf(particle) == -1){
+			this.partikels.push(particle);
+		}
+	}
+	removeParticle(particle){
+		let index = this.partikels.indexOf(particle);
+		if(index != -1){
+			this.partikels.splice(index, 1);
+		}
+	}
+	
 	/*
 	 * To be called when the apperance of blobs and arrows have changed.
 	 */
