@@ -13,7 +13,6 @@ export class Analyzer{
 		return this.analyzationIndex;
 	}
 	analyze(){
-		console.log("analy")
 		let index = this.newAnalyzationIndex();
 		for(let x of this.herde.focusedParticles)
 			this.analyzeLayer(x, 0, x, index);
@@ -23,10 +22,10 @@ export class Analyzer{
 				x.closestFocus = null;
 			}
 		}
+		this.herde.plow.startPlowing();
 	}
 	analyzeLayer(target, distance, closest, index){
 		if(target.analyzationIndex != this.analyzationIndex || distance < target.distance){
-			console.log(target.text, distance)
 			target.distance = distance;
 			target.closestFocus = closest;
 			target.analyzationIndex = index;

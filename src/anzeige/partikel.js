@@ -77,6 +77,9 @@ export class Partikel{
 			this.herde.refresh();
 		}
 	}
+	get solid(){
+		return this.visible && !this.going
+	}
 	draw(leinwand, time){
 		if(this.visible){
 			// Handle the coming or going animation scale change
@@ -96,7 +99,7 @@ export class Partikel{
 					this.going = false;
 					this.visible = false;
 					this.scale = 0;
-					this.herde.removeParticle()
+					this.herde.removeParticle(this)
 				}
 				else
 					this.herde.refresh() // Continue animation

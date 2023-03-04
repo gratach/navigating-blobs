@@ -1,4 +1,5 @@
 import {Analyzer} from "./analyzer.js"
+import {Plow} from "./plow.js"
 /*
  * A group of partikels and arrows inbetween them, that can be drawn to a leinwand.
  */
@@ -24,6 +25,8 @@ export class Herde{
 		this.focusedParticles = [];
 		this.mainFocus = null;
 		this.analyzer = new Analyzer(this)
+		
+		this.plow = new Plow(this)
 		
 		dynamik.set_herde(this);
 	}
