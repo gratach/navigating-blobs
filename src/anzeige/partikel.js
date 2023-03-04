@@ -24,10 +24,20 @@ export class Partikel{
 		
 		this.satelites = []
 		
-		this.marked = false;
+		this.focused = false;
 		
 		this.herde = herde;
+		this.herde.allParticles.add(this)
 		this.refresh();
+		
+		//used by analyzer
+		this.analyzationIndex = null;
+		this.distance = -1;
+		this.closestFocus = null;
+	}
+	delete(){
+		this.herde.allParticles.delete(this)
+		throw "TODO implement"
 	}
 	/*
 	 * To be called when the apperance of the partikel has changed.
@@ -117,7 +127,7 @@ export class Partikel{
 				this.context.beginPath();
 				this.context.ellipse(this.canvas.width / 2, this.canvas.height / 2, (this.canvas.width - this.context.lineWidth) / 2, (this.canvas.height - this.context.lineWidth) / 2, 0, 0, 2 * Math.PI);
 				this.context.fill();
-				this.context.strokeStyle = this.marked ? "rgb(255,0,0)" : "rgb(0,0,0)"
+				this.context.strokeStyle = this.focused ? "rgb(255,0,0)" : "rgb(0,0,0)"
 				this.context.stroke();
 				
 				// Draw text to buffer
@@ -136,6 +146,10 @@ export class Partikel{
 		}
 		var ctx = leinwand.context;
 		ctx.drawImage(this.canvas, this.x - this.canvas.width * this.scale / 2, this.y - this.canvas.height * this.scale / 2, this.canvas.width * this.scale, this.canvas.height * this.scale);
+		
+		ctx.fillStyle = "rgb(255,255,0)";
+		ctx.fillText("" + this.distance, this.x, this.y);
+		
 		
 		// Draw all the links conecting to this particle
 		for(let x of this.connections)
@@ -216,7 +230,7 @@ export class Partikel{
 		}
 		if(inside){
 			if(e.klick){
-				this.marked = !this.marked;
+				this.herde.stealFocus(this);
 				this.refresh()
 			}
 		}

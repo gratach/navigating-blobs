@@ -1,3 +1,4 @@
+import {Analyzer} from "./analyzer.js"
 /*
  * A group of partikels and arrows inbetween them, that can be drawn to a leinwand.
  */
@@ -8,6 +9,7 @@ export class Herde{
 	 */
 	constructor( dynamik){
 		this.partikels = [];
+		this.allParticles = new Set();
 		this.links = [];
 		this.lineWidth = 4;
 		this.sateliteWidth = 30;
@@ -16,23 +18,48 @@ export class Herde{
 		this.leinwand = null;
 		this.dynamik = dynamik;
 		this.noMouse = {"x" : null, "y" : null}
-		this.mousePosition = this.noMouse
+		this.mousePosition = this.noMouse;
 		this.frameNumber = 0;
 		
-		this.focusedParticels = []
+		this.focusedParticles = [];
 		this.mainFocus = null;
+		this.analyzer = new Analyzer(this)
+		
 		dynamik.set_herde(this);
 	}
-	setFocus(particle, main = false){
-		if(this.focusedParticels.indexOf(particle) == -1){
-			particle.focused = true;
-			this.focusedParticels.push(particle)
+	//set focus value of particle to true or false
+	setFocus(particle, focusValue, analyze = true){
+		if(this.focused != focusValue){
+			if(focusValue){
+				this.focusedParticles.push(particle);
+			}
+			else{
+				this.focusedParticles.splice(this.focusedParticles.indexOf(particle), 1);
+				if(this.mainFocus === particle){
+					this.mainFocus = null;
+					particle.mainFocus = false;
+				}
+			}
+			particle.focused = focusValue;
+			particle.refresh();
+			if(analyze)
+				this.analyzer.analyze()
 		}
-		if(main){
+	}
+	setMainFocus(particle, analyze = true){
+		this.setFocus(particle, true, false);
+		if(this.mainFocus !== null)
 			this.mainFocus.mainFocus = false;
-			this.mainFocus = particle;
-			this.mainFocus.mainFocus = true;
+		this.mainFocus = particle;
+		particle.mainFocus = true;
+		if(analyze)
+			this.analyzer.analyze()
+	}
+	stealFocus(particle){
+		if(particle.closestFocus !== null){
+			this.setFocus(particle.closestFocus, false, false);
 		}
+		this.setMainFocus(particle);
 	}
 	get width(){
 		return this.leinwand.width

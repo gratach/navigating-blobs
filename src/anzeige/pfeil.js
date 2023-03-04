@@ -4,8 +4,15 @@ export class Pfeil{
 		this.to = zu;
 		this.herde = von.herde;
 		this.from.addConnection(this);
+		this.to.addConnection(this);
 		this.fromSatelite = null;
 		this.toSatelite = null;
+	}
+	other(particle){
+		if(particle === this.from)
+			return this.to;
+		if(particle === this.to)
+			return this.from;
 	}
 	draw(leinwand, zeit){
 		
@@ -53,6 +60,7 @@ export class Pfeil{
 			
 			if(sateliteWidth != 0){
 				let sateliteHeight = sateliteWidth * this.herde.yStretch;
+				ctx.fillStyle = "rgb(0,0,0)"
 				ctx.ellipse(satX, satY, sateliteWidth / 2, sateliteHeight / 2, 0, 0, 2 * Math.PI);
 				ctx.fill()
 			}

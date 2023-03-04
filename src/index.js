@@ -35,6 +35,7 @@ var l5 = new Pfeil(p5, p6);
 var l6 = new Pfeil(p6, p7);
 var l7 = new Pfeil(p7, p8);
 var l8 = new Pfeil(p7, p9);
+h.setFocus(p1, true)
 // z.ebenen.push(
 // 	(ctx, w, h, zeit) => {
 // 		ctx.fillRect(w / 3, h / 3, w / 3, h / 3);
