@@ -29,6 +29,11 @@ export class Plow{
 	}
 	plowLayer(){
 		if(this.farthestIn > this.closestOut || this.farthestIn == -1){
+			/*// find how mutch space is neaded
+			let spaceNeaded = this.totalCount - this.maxParticles;
+			for(let x of this,herde.allParticles){
+				if(!x.solid && x.distance < 
+			}*/
 			for(let x of this.herde.partikels){
 				if(x.solid && (x.distance == this.farthestIn || x.distance == -1)){
 					x.vanish();

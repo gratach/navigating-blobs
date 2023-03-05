@@ -39,7 +39,7 @@ export class Pfeil{
 				[satX, satY] = [fromX, fromY];
 				sateliteWidth = fromSateliteActive * this.herde.sateliteWidth * this.from.scale;
 			}
-			else if(this.fromSatelite != null){
+			if(this.fromSatelite != null && this.to.visible && !this.to.going && !this.to.coming){
 				this.from.removeSatelite(this.fromSatelite);
 				this.fromSatelite = null;
 			}
@@ -53,7 +53,7 @@ export class Pfeil{
 				[satX, satY] = [toX, toY];
 				sateliteWidth = toSateliteActive * this.herde.sateliteWidth * this.to.scale;
 			}
-			else if(this.toSatelite !== null){
+			if(this.toSatelite != null && this.from.visible && !this.from.going && !this.from.coming){
 				this.to.removeSatelite(this.toSatelite);
 				this.toSatelite = null;
 			}

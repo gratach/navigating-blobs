@@ -59,9 +59,14 @@ export class Partikel{
 	}
 	vanish(){
 		if(this.visible){
+			if(this.coming){
+				let now = performance.now();
+				this.animationStartTime = now + now - this.animationStartTime - this.animationDuration;
+			}
+			else
+				this.animationStartTime = performance.now();
 			this.coming = false;
 			this.going = true;
-			this.animationStartTime = performance.now();
 			this.herde.refresh();
 		}
 	}
@@ -70,10 +75,15 @@ export class Partikel{
 			if(!this.visible){
 				this.herde.addParticle(this)
 			}
+			if(this.going){
+				let now = performance.now();
+				this.animationStartTime = now + now - this.animationStartTime - this.animationDuration;
+			}
+			else
+				this.animationStartTime = performance.now();
 			this.coming = true;
 			this.going = false
 			this.visible = true;
-			this.animationStartTime = performance.now();
 			this.herde.refresh();
 		}
 	}
@@ -251,7 +261,7 @@ export class Partikel{
 	}
 	removeSatelite(satelite){
 		let indexOf = this.satelites.indexOf(satelite);
-		if(!indexOf == -1){
+		if(indexOf != -1){
 			this.satelites.splice(indexOf, 1);
 			this.updateSateliteAngles();
 		}
