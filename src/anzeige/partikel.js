@@ -256,21 +256,27 @@ export class Partikel{
 	addSatelite(){
 		let satelite = new Satelite(this)
 		this.satelites.push(satelite);
-		this.updateSateliteAngles();
 		return satelite;
 	}
 	removeSatelite(satelite){
 		let indexOf = this.satelites.indexOf(satelite);
-		if(indexOf != -1){
+		if(indexOf != -1)
 			this.satelites.splice(indexOf, 1);
-			this.updateSateliteAngles();
-		}
 	}
 	updateSateliteAngles(){
-		let offset = Math.PI * 2 / this.satelites.length;
 		let angle = 0;
+		for(let x of this.connections){
+			let other = x.other(this)
+			if(other.visible && !other.coming && !other.going){
+				angle += Math.atan2(other.x - this.x, other.y - this.y)
+			}
+		}
+		let offset = Math.PI * 2 / this.satelites.length;
+		angle += offset / 2;
 		for(let x of this.satelites){
-			x.setAngle(angle)
+			if(isNaN(angle))
+				alert("angle")
+			x.setDestinationAngle(angle)
 			angle += offset;
 		}
 	}

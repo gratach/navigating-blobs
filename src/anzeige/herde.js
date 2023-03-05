@@ -13,7 +13,6 @@ export class Herde{
 		this.allParticles = new Set();
 		this.links = [];
 		this.lineWidth = 4;
-		this.sateliteWidth = 30;
 		this.yStretch = 0.7;
 		this.todonew = false;
 		this.leinwand = null;
@@ -21,6 +20,9 @@ export class Herde{
 		this.noMouse = {"x" : null, "y" : null}
 		this.mousePosition = this.noMouse;
 		this.frameNumber = 0;
+		
+		this.sateliteWidth = 30;
+		this.sateliteAngleSpeed = 0.1;
 		
 		this.focusedParticles = [];
 		this.mainFocus = null;

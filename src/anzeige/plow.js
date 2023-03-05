@@ -48,7 +48,6 @@ export class Plow{
 				if(!x.solid && x.distance < this.farthestIn)
 					spaceNeaded += 1;
 			}
-			console.log("spaceNeaded", spaceNeaded)
 			// iterate to remove particles
 			for(let x of this.herde.partikels){
 				if(spaceNeaded <= 0){
