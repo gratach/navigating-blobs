@@ -1,7 +1,10 @@
 export class Satelite{
-	constructor(particle){
+	constructor(particle, connection){
 		this.particle = particle
+		this.connection  = connection;
 		this.angle = null;
+		this.xDirection = 1;
+		this.yDirection = 0;
 	}
 	setDestinationAngle(angle){
 		this.destinationAngle = angle;
@@ -19,8 +22,6 @@ export class Satelite{
 			this.particle.herde.refresh();
 		}
 		this.angle = ((this.angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-			if(isNaN(this.angle))
-				alert("ANGLENAN")
 		this.xDirection = Math.sin(this.angle);
 		this.yDirection = Math.cos(this.angle);
 	}

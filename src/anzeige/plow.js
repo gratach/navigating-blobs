@@ -2,9 +2,9 @@
  * Helper to remove old particles and replace them by newer ones
  */
 export class Plow{
-	constructor(herde, maxParticles = 5){
+	constructor(herde){
 		this.herde = herde;
-		this.maxParticles = maxParticles;
+		this.maxParticles = herde.maxParticles;
 		this.waitForPlowing = false;
 		this.totalCount = null;
 	}
@@ -23,7 +23,7 @@ export class Plow{
 				if(x.distance > this.farthestOut)
 					this.farthestOut = x.distance;
 				if(x.distance < this.closestOut)
-					this.closestOut = x.distance
+					this.closestOut = x.distance;
 			}
 		}
 		if(!this.waitForPlowing){
@@ -70,7 +70,7 @@ export class Plow{
 				break;
 			}
 			if(!x.solid && x.distance == this.closestOut){
-				x.appear()
+				x.appear();
 				this.totalCount += 1;
 			}
 		}

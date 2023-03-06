@@ -4,14 +4,14 @@ export class Partikel{
 	/*
 	 * Creates some text bubble
 	 */
-	constructor(herde, x, y, text){
+	constructor(herde, text){
 		this.todonew = true;
 		
 		this.text = text;
-		this.x = x;
-		this.y = y;
-		this.scale = 1;
-		this.bufferWidth = 200;
+		this.x = null;
+		this.y = null;
+		this.scale = 0;
+		this.bufferWidth = herde.particleWidth;;
 		this.canvas = null;
 		this.connections = new Set();
 		this.hover = false;
@@ -19,15 +19,15 @@ export class Partikel{
 		this.visible = false;
 		this.coming = false;
 		this.going = false;
-		this.animationStartTime = performance.now()
+		this.animationStartTime = performance.now();
 		this.animationDuration = 1000;
 		
-		this.satelites = []
+		this.satelites = [];
 		
 		this.focused = false;
 		
 		this.herde = herde;
-		this.herde.allParticles.add(this)
+		this.herde.allParticles.add(this);
 		this.refresh();
 		
 		//used by analyzer
@@ -36,8 +36,8 @@ export class Partikel{
 		this.closestFocus = null;
 	}
 	delete(){
-		this.herde.allParticles.delete(this)
-		throw "TODO implement"
+		this.herde.allParticles.delete(this);
+		throw "TODO implement";
 	}
 	/*
 	 * To be called when the apperance of the partikel has changed.
@@ -57,6 +57,16 @@ export class Partikel{
 	get height(){
 		return this.bufferHeight * this.scale;
 	}
+	
+	hide(){
+		this.going = false;
+		this.visible = false;
+		this.herde.removeParticle(this);
+		for(let link of this.connections)
+			link.checkSatelites();
+	}
+	
+	// Start the process of making a partice vanish
 	vanish(){
 		if(this.visible){
 			if(this.coming){
@@ -67,14 +77,41 @@ export class Partikel{
 				this.animationStartTime = performance.now();
 			this.coming = false;
 			this.going = true;
+			for(let link of this.connections)
+				link.checkSatelites();
 			this.herde.refresh();
 		}
 	}
+	/*
+	 * This should not be called directly. Use appear instead
+	 */
+	show(){
+		if(!this.visible){
+			this.visible = true;
+			
+			// Define position by averaging over the satelite representation positions if there are any
+			// elsewhise set position to center
+			let [x, y] = [0, 0];
+			let number = 0;
+			for(let link of this.connections){
+				let satelite = link.sateliteRepresentation(this);
+				if(satelite !== null){
+					number += 1;
+					let satelitePosition = satelite.getCoordinates();
+					x += satelitePosition[0];
+					y += satelitePosition[1];
+				}
+			}
+			[this.x, this.y] =  number == 0 ? [this.herde.width / 2, this.herde.height / 2] : [x / number, y / number];
+			
+			this.herde.addParticle(this);
+		}
+	}
+	
+	// Start the process of making a particle appear
 	appear(){
 		if(!this.visible || this.going){
-			if(!this.visible){
-				this.herde.addParticle(this)
-			}
+			this.show();
 			if(this.going){
 				let now = performance.now();
 				this.animationStartTime = now + now - this.animationStartTime - this.animationDuration;
@@ -82,8 +119,9 @@ export class Partikel{
 			else
 				this.animationStartTime = performance.now();
 			this.coming = true;
-			this.going = false
-			this.visible = true;
+			this.going = false;
+			for(let link of this.connections)
+				link.checkSatelites();
 			this.herde.refresh();
 		}
 	}
@@ -95,24 +133,26 @@ export class Partikel{
 			// Handle the coming or going animation scale change
 			if(this.coming){
 				this.scale = (time - this.animationStartTime) / this.animationDuration;
+				if(this.scale < 0)
+					this.scale = 0;
 				if(this.scale >= 1){
 					this.coming = false;
-					this.scale = 1
+					this.scale = 1;
 				}
 				else
-					this.herde.refresh() // Continue animation
+					this.herde.refresh(); // Continue animation
 			}
 			else if(this.going){
 				this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
+				if(this.scale > 1)
+					this.scale = 1;
 				// Hide particle and remove from herde if going animation is complete
 				if(this.scale <= 0){
-					this.going = false;
-					this.visible = false;
 					this.scale = 0;
-					this.herde.removeParticle(this)
+					this.hide();
 				}
 				else
-					this.herde.refresh() // Continue animation
+					this.herde.refresh(); // Continue animation
 			}
 			else 
 				this.scale = 1;
@@ -166,7 +206,7 @@ export class Partikel{
 		
 		// Draw all the links conecting to this particle
 		for(let x of this.connections)
-			x.draw(leinwand, time)
+			x.draw(leinwand, time);
 	}
 	/*
 	 * return the two closest points of the elipse of this partikel and of one choosen neighbor
@@ -209,14 +249,14 @@ export class Partikel{
 		neighborsX = neighbor.x + (this.x - neighbor.x) * toCut;
 		neighborsY = neighbor.y + (this.y - neighbor.y) * toCut;
 		
-		return [[thisX, thisY], [neighborsX, neighborsY]]
+		return [[thisX, thisY], [neighborsX, neighborsY]];
 	}
 	
 	/*
 	 * Dont call this directly
 	 */
 	addConnection(connection){
-		this.connections.add(connection)
+		this.connections.add(connection);
 	}
 	
 	/*
@@ -225,8 +265,8 @@ export class Partikel{
 	connectedWith(neighbor){
 		for(let connection of this.connections)
 			if(connection.from === neighbor || connection.to === neighbor)
-				return true
-		return false
+				return true;
+		return false;
 	}
 	
 	/*
@@ -244,17 +284,29 @@ export class Partikel{
 		if(inside){
 			if(e.klick){
 				this.herde.stealFocus(this);
-				this.refresh()
+				this.refresh();
+			}
+			else if(e.doubleklick){
+				if(this.focused){
+					if(this.herde.focusedParticles.length > 1){
+						this.herde.setFocus(this, false);
+						this.refresh();
+					}
+				}
+				else{
+					this.herde.setMainFocus(this);
+					this.refresh();
+				}
 			}
 		}
 		if(inside != this.hover){
-			this.refresh()
+			this.refresh();
 		}
 		this.hover = inside;
 	}
 	
-	addSatelite(){
-		let satelite = new Satelite(this)
+	addSatelite(link){
+		let satelite = new Satelite(this, link);
 		this.satelites.push(satelite);
 		return satelite;
 	}
@@ -268,15 +320,13 @@ export class Partikel{
 		for(let x of this.connections){
 			let other = x.other(this)
 			if(other.visible && !other.coming && !other.going){
-				angle += Math.atan2(other.x - this.x, other.y - this.y)
+				angle += Math.atan2(other.x - this.x, other.y - this.y);
 			}
 		}
 		let offset = Math.PI * 2 / this.satelites.length;
 		angle += offset / 2;
 		for(let x of this.satelites){
-			if(isNaN(angle))
-				alert("angle")
-			x.setDestinationAngle(angle)
+			x.setDestinationAngle(angle);
 			angle += offset;
 		}
 	}

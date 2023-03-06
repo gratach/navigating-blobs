@@ -14,6 +14,7 @@ export class Herde{
 		this.links = [];
 		this.lineWidth = 4;
 		this.yStretch = 0.7;
+		this.particleWidth = 150;
 		this.todonew = false;
 		this.leinwand = null;
 		this.dynamik = dynamik;
@@ -21,7 +22,8 @@ export class Herde{
 		this.mousePosition = this.noMouse;
 		this.frameNumber = 0;
 		
-		this.sateliteWidth = 30;
+		this.maxParticles = 10;
+		this.sateliteWidth = 10;
 		this.sateliteAngleSpeed = 0.1;
 		
 		this.focusedParticles = [];
@@ -41,14 +43,19 @@ export class Herde{
 			else{
 				this.focusedParticles.splice(this.focusedParticles.indexOf(particle), 1);
 				if(this.mainFocus === particle){
-					this.mainFocus = null;
+					if(this.focusedParticles.length > 0){
+						this.mainFocus = this.focusedParticles[0];
+						this.mainFocus.mainFocus = true;
+					}
+					else
+						this.mainFocus = null;
 					particle.mainFocus = false;
 				}
 			}
 			particle.focused = focusValue;
 			particle.refresh();
 			if(analyze)
-				this.analyzer.analyze()
+				this.analyzer.analyze();
 		}
 	}
 	setMainFocus(particle, analyze = true){
@@ -67,10 +74,10 @@ export class Herde{
 		this.setMainFocus(particle);
 	}
 	get width(){
-		return this.leinwand.width
+		return this.leinwand.width;
 	}
 	get height(){
-		return this.leinwand.height
+		return this.leinwand.height;
 	}
 	set_leinwand(leinwand){
 		this.leinwand = leinwand;
@@ -101,8 +108,8 @@ export class Herde{
 	 */
 	draw(leinwand, zeit){
 		this.todonew = false;
-		this.dynamik.rearange()
-		this.handleMouse()
+		this.dynamik.rearange();
+		this.handleMouse();
 		for(let x of this.partikels){
 			x.draw(leinwand, zeit);
 		}
@@ -110,8 +117,8 @@ export class Herde{
 	}
 	
 	mouseEvent(e){
-		this.mousePosition = [e.x, e.y]
-		this.handleMouse(e.klick, e.doubleklick)
+		this.mousePosition = [e.x, e.y];
+		this.handleMouse(e.klick, e.doubleklick);
 	}
 	
 	handleMouse(klick = false, doubleklick = false){
@@ -126,6 +133,6 @@ export class Herde{
 		}
 		for(let x of this.links){
 			x.handleMouse(e);
-		}
+		};
 	}
 }

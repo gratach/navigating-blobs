@@ -1,6 +1,6 @@
 export class Dynamik{
 	constructor(){
-		this.movement = []
+		this.movement = [];
 		this.borderPotential = (distance, strength) => {
 			if(distance < 0)
 				return 10;
@@ -9,23 +9,17 @@ export class Dynamik{
 		};
 		this.partikelPotential = (xDistance, yDistance, strength) => {
 			let squareDistance = xDistance * xDistance + yDistance * yDistance;
-			if(squareDistance == 0)
-				alert("=0")
 			strength *= 100;
 			if(squareDistance == 0) throw "err";
 			let rawReturn = [ - xDistance * strength / squareDistance,  - yDistance * strength / squareDistance];
-			if(isNaN(rawReturn[0] * rawReturn[1]))
-				alert("potpar")
 			return rawReturn
 		};
 		this.connectionPotential = (xDistance, yDistance, strength) => {
 			let squareDistance = xDistance * xDistance + yDistance * yDistance;
 			strength *= 100;
 			if(squareDistance == 0) throw "err";
-			let formula = strength / squareDistance - 0.01;
+			let formula = strength / squareDistance - 0.05;
 			let rawReturn = [ - xDistance * formula,  - yDistance * formula];
-			if(isNaN(rawReturn[0] * rawReturn[1]))
-				alert("potcon")
 			return rawReturn
 		};
 	}
@@ -35,7 +29,7 @@ export class Dynamik{
 			
 		// Set movement to zero
 		for(let i = 0; i < this.movement.length; i++){
-			this.movement[i] = [0, 0]
+			this.movement[i] = [0, 0];
 		}	
 		// Add repelling force from border
 		for(let i = 0; i < this.movement.length; i++){
@@ -48,7 +42,7 @@ export class Dynamik{
 			for(let j = i + 1; j < this.movement.length; j++){
 				let partikel1 = this.herde.partikels[i];
 				let partikel2 = this.herde.partikels[j];
-				let [[x1, y1], [x2, y2]] = partikel1.closestPoints(partikel2, 1)
+				let [[x1, y1], [x2, y2]] = partikel1.closestPoints(partikel2, 1);
 				let [xPush, yPush] = partikel1.connectedWith(partikel2) ? this.connectionPotential(x2 - x1, y2 - y1, partikel1.scale * partikel2.scale) : this.partikelPotential(x2 - x1, y2 - y1, partikel1.scale * partikel2.scale);
 				this.movement[i][0] += xPush;
 				this.movement[i][1] += yPush;
@@ -67,11 +61,9 @@ export class Dynamik{
 			if(Math.abs(this.movement[i][0]) > 0.5 || Math.abs(this.movement[i][1]) > 0.5){
 				keepGoing = true;
 			}
-			if(isNaN(partikel.x))
-				alert("partik")
 		}
 		if(keepGoing){
-			this.herde.refresh()
+			this.herde.refresh();
 		}
 		
 		for(let x of this.herde.partikels)

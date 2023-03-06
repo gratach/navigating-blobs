@@ -69,10 +69,6 @@ export class Leinwand{
 			"klick" : klick,
 			"doubleklick" : doubleklick
 		})
-		if(klick)
-			console.log("klick")
-		if(doubleklick)
-			console.log("doubleklick")
 	}
 	
 	/*
