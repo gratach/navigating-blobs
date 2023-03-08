@@ -1,4 +1,4 @@
-import {Analyzer} from "./analyzing.js"
+import {SwarmFocus} from "./focusing.js"
 import {Plow} from "./plowing.js"
 import {Dynamic} from "./dynamic.js"
 import {SwarmMouseHandler} from "./mouseevents.js"
@@ -18,23 +18,19 @@ export class Swarm{
 	 * 
 	 */
 	constructor(canvas){
+		//court
 		this.particles = [];
+		
+		//memory
 		this.allParticles = new Set();
-		this.links = [];
+		
+		//drawing
 		this.lineWidth = 4;
 		this.yStretch = 0.7;
 		this.particleWidth = 150;
-		this.todonew = false;
-		this.leinwand = null;
-		this.noMouse = {"x" : null, "y" : null}
-		this.mousePosition = this.noMouse;
 		
-		this.maxParticles = 10;
 		this.sateliteWidth = 10;
 		this.sateliteAngleSpeed = 0.1;
-		
-		this.focusedParticles = [];
-		this.mainFocus = null;
 		
 		/** 
 		 * Implements logic for rearanging the particles on screen and making them move
@@ -44,12 +40,12 @@ export class Swarm{
 		
 		/** 
 		 * Implements logic for measuring the particles distance to the closest focused particle
-		 * @see Analyzer
+		 * @see SwarmFocus
 		 */
-		this.analyzer = new Analyzer(this);
+		this.focus = new SwarmFocus(this);
 		
 		/** Implements logic for letting relevant particles appear at the visible screen and and making irrelevant particles vanish from there
-		 * @see Plow
+		 * @see Plow.Plow
 		 */
 		this.plow = new Plow(this);
 		
@@ -59,52 +55,9 @@ export class Swarm{
 		this.mouse = new SwarmMouseHandler(this);
 		
 		/** Implements logic for mouse events beeing handled
-		 * @see Plow
+		 * @see SwarmMouseHandler
 		 */
 		this.court = new Court(this, canvas);
-	}
-	//set focus value of particle to true or false
-	setFocus(particle, focusValue, analyze = true){
-		if(this.focused != focusValue){
-			if(focusValue){
-				this.focusedParticles.push(particle);
-			}
-			else{
-				this.focusedParticles.splice(this.focusedParticles.indexOf(particle), 1);
-				if(this.mainFocus === particle){
-					if(this.focusedParticles.length > 0){
-						this.mainFocus = this.focusedParticles[0];
-						this.mainFocus.mainFocus = true;
-					}
-					else
-						this.mainFocus = null;
-					particle.mainFocus = false;
-				}
-			}
-			particle.focused = focusValue;
-			particle.refresh();
-			if(analyze)
-				this.analyzer.analyze();
-		}
-	}
-	setMainFocus(particle, analyze = true){
-		this.setFocus(particle, true, false);
-		if(this.mainFocus !== null)
-			this.mainFocus.mainFocus = false;
-		this.mainFocus = particle;
-		particle.mainFocus = true;
-		if(analyze)
-			this.analyzer.analyze()
-	}
-	stealFocus(particle){
-		console.log("steal focus")
-		if(particle.closestFocus !== null){
-			this.setFocus(particle.closestFocus, false, false);
-		}
-		this.setMainFocus(particle);
-	}
-	set_leinwand(leinwand){
-		this.leinwand = leinwand;
 	}
 	addParticle(particle){
 		if(this.particles.indexOf(particle) == -1){

@@ -71,9 +71,6 @@ export class SwarmMouseHandler{
 		for(let x of this.swarm.particles){
 			x.mouse.handleMouse();
 		}
-		for(let x of this.swarm.links){
-			x.handleMouse();
-		};
 	}
 	
 	mouseEvent(e, click = false, doubleclick = false){
@@ -111,18 +108,18 @@ export class ParticleMouseHandler{
 		}
 		if(inside){
 			if(this.swarm.mouse.clicked){
-				this.swarm.stealFocus(this.particle);
+				this.particle.focus.stealFocus();
 				this.particle.refresh();
 			}
 			else if(this.swarm.mouse.doubleclicked){
-				if(this.particle.focused){
-					if(this.swarm.focusedParticles.length > 1){
-						this.swarm.setFocus(this.particle, false);
+				if(this.particle.focus.focused){
+					if(this.swarm.focus.countFocus() > 1){
+						this.particle.focus.setFocus(false);
 						this.particle.refresh();
 					}
 				}
 				else{
-					this.swarm.setMainFocus(this.particle);
+					this.particle.focus.setMainFocus(this.particle);
 					this.particle.refresh();
 				}
 			}

@@ -9,10 +9,24 @@
 export class Plow{
 	constructor(swarm){
 		this.swarm = swarm;
-		this.maxParticles = swarm.maxParticles;
+		this.maxParticles = 10;
 		this.waitForPlowing = false;
 		this.totalCount = null;
 	}
+	
+	/**
+	 * The maximal particle number
+	 */
+	get maximalParticleNumber(){
+		return this.maxParticles;
+	}
+	set maximalParticleNumber(value){
+		this.maxParticles = maximalParticleNumber();
+		this.startPlowing();
+	}
+	/**
+	 * Remove old particles and replace them by newer ones
+	 */
 	startPlowing(){
 		this.farthestIn = 0;
 		this.farthestOut = 0;

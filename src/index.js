@@ -47,7 +47,7 @@ var l7 = new Arrow(p7, p8);
 var l8 = new Arrow(p7, p9);
 new Arrow(p7, p2)
 new Arrow(p8, p3)
-h.setFocus(p1, true)
+h.focus.setFocus(p1, true)
 // z.ebenen.push(
 // 	(ctx, w, h, zeit) => {
 // 		ctx.fillRect(w / 3, h / 3, w / 3, h / 3);

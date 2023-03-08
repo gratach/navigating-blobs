@@ -5,6 +5,7 @@
 
 import {Satelite} from "./satelite.js";
 import {ParticleMouseHandler} from "./mouseevents.js";
+import {ParticleFocus} from "./focusing.js";
 
 /** A class wrapping all logic behind a single particle */
 export class Particle{
@@ -31,18 +32,25 @@ export class Particle{
 		
 		this.satelites = [];
 		
-		this.focused = false;
 		
 		this.swarm = swarm;
 		this.swarm.allParticles.add(this);
 		this.refresh();
 		
-		//used by analyzer
+		//used by focus
 		this.analyzationIndex = null;
 		this.distance = -1;
-		this.closestFocus = null;
 		
+		
+		/** Implements logic for mouse events beeing handled
+		 * @see ParticleMouseHandler
+		 */
 		this.mouse = new ParticleMouseHandler(this);
+		
+		/** Implements logic for focus beeing handled
+		 * @see ParticleFocus
+		 */
+		this.focus = new ParticleFocus(this);
 	}
 	delete(){
 		this.swarm.allParticles.delete(this);
@@ -189,7 +197,7 @@ export class Particle{
 				this.context.beginPath();
 				this.context.ellipse(this.canvas.width / 2, this.canvas.height / 2, (this.canvas.width - this.context.lineWidth) / 2, (this.canvas.height - this.context.lineWidth) / 2, 0, 0, 2 * Math.PI);
 				this.context.fill();
-				this.context.strokeStyle = this.focused ? "rgb(255,0,0)" : "rgb(0,0,0)"
+				this.context.strokeStyle = this.focus.focused ? "rgb(255,0,0)" : "rgb(0,0,0)"
 				this.context.stroke();
 				
 				// Draw text to buffer
