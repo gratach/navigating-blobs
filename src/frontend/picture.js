@@ -2,7 +2,7 @@
  * Provides an fullscreen canvas that adds itself to the html body.
  * Accepts a drawing as argument that states what should be drawn in the canvas. 
  */
-export class Leinwand{
+export class Picture{
 	constructor(drawing){
 		this.drawing = drawing;
 		this.drawing.set_leinwand(this);

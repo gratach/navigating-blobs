@@ -1,17 +1,17 @@
 import {Satelite} from "./satelite.js";
 
-export class Partikel{
+export class Particle{
 	/*
 	 * Creates some text bubble
 	 */
-	constructor(herde, text){
+	constructor(swarm, text){
 		this.todonew = true;
 		
 		this.text = text;
 		this.x = null;
 		this.y = null;
 		this.scale = 0;
-		this.bufferWidth = herde.particleWidth;;
+		this.bufferWidth = swarm.particleWidth;;
 		this.canvas = null;
 		this.connections = new Set();
 		this.hover = false;
@@ -26,8 +26,8 @@ export class Partikel{
 		
 		this.focused = false;
 		
-		this.herde = herde;
-		this.herde.allParticles.add(this);
+		this.swarm = swarm;
+		this.swarm.allParticles.add(this);
 		this.refresh();
 		
 		//used by analyzer
@@ -36,20 +36,20 @@ export class Partikel{
 		this.closestFocus = null;
 	}
 	delete(){
-		this.herde.allParticles.delete(this);
+		this.swarm.allParticles.delete(this);
 		throw "TODO implement";
 	}
 	/*
-	 * To be called when the apperance of the partikel has changed.
+	 * To be called when the apperance of the particle has changed.
 	 */
 	refresh(){
-		if(!this.todonew && this.herde != null){
+		if(!this.todonew && this.swarm != null){
 			this.todonew = true;
-			this.herde.refresh();
+			this.swarm.refresh();
 		}
 	}
 	get bufferHeight(){
-		return Math.round(this.bufferWidth * this.herde.yStretch);
+		return Math.round(this.bufferWidth * this.swarm.yStretch);
 	}
 	get width(){
 		return this.bufferWidth * this.scale;
@@ -61,7 +61,7 @@ export class Partikel{
 	hide(){
 		this.going = false;
 		this.visible = false;
-		this.herde.removeParticle(this);
+		this.swarm.removeParticle(this);
 		for(let link of this.connections)
 			link.checkSatelites();
 	}
@@ -79,7 +79,7 @@ export class Partikel{
 			this.going = true;
 			for(let link of this.connections)
 				link.checkSatelites();
-			this.herde.refresh();
+			this.swarm.refresh();
 		}
 	}
 	/*
@@ -102,9 +102,9 @@ export class Partikel{
 					y += satelitePosition[1];
 				}
 			}
-			[this.x, this.y] =  number == 0 ? [this.herde.width / 2, this.herde.height / 2] : [x / number, y / number];
+			[this.x, this.y] =  number == 0 ? [this.swarm.width / 2, this.swarm.height / 2] : [x / number, y / number];
 			
-			this.herde.addParticle(this);
+			this.swarm.addParticle(this);
 		}
 	}
 	
@@ -122,7 +122,7 @@ export class Partikel{
 			this.going = false;
 			for(let link of this.connections)
 				link.checkSatelites();
-			this.herde.refresh();
+			this.swarm.refresh();
 		}
 	}
 	get solid(){
@@ -140,19 +140,19 @@ export class Partikel{
 					this.scale = 1;
 				}
 				else
-					this.herde.refresh(); // Continue animation
+					this.swarm.refresh(); // Continue animation
 			}
 			else if(this.going){
 				this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
 				if(this.scale > 1)
 					this.scale = 1;
-				// Hide particle and remove from herde if going animation is complete
+				// Hide particle and remove from swarm if going animation is complete
 				if(this.scale <= 0){
 					this.scale = 0;
 					this.hide();
 				}
 				else
-					this.herde.refresh(); // Continue animation
+					this.swarm.refresh(); // Continue animation
 			}
 			else 
 				this.scale = 1;
@@ -175,7 +175,7 @@ export class Partikel{
 				
 				
 				// Draw elipse to buffer
-				this.context.lineWidth = this.herde.lineWidth;
+				this.context.lineWidth = this.swarm.lineWidth;
 				this.context.fillStyle = this.hover ? "rgb(0,255,0)" : "rgb(100,100,255)";
 				this.context.beginPath();
 				this.context.ellipse(this.canvas.width / 2, this.canvas.height / 2, (this.canvas.width - this.context.lineWidth) / 2, (this.canvas.height - this.context.lineWidth) / 2, 0, 0, 2 * Math.PI);
@@ -209,7 +209,7 @@ export class Partikel{
 			x.draw(leinwand, time);
 	}
 	/*
-	 * return the two closest points of the elipse of this partikel and of one choosen neighbor
+	 * return the two closest points of the elipse of this particle and of one choosen neighbor
 	 */
 	closestPoints(neighbor, minimalDistance = 0){
 		
@@ -260,7 +260,7 @@ export class Partikel{
 	}
 	
 	/*
-	 * Returns whether this partikel is connected to an other partikel by an pfeil
+	 * Returns whether this particle is connected to an other particle by an arrow
 	 */
 	connectedWith(neighbor){
 		for(let connection of this.connections)
@@ -270,7 +270,7 @@ export class Partikel{
 	}
 	
 	/*
-	 * Checks if the mouse is hovering over partikel and sets this.hover flag if so
+	 * Checks if the mouse is hovering over particle and sets this.hover flag if so
 	 */
 	handleMouse(e){
 		let inside;
@@ -283,18 +283,18 @@ export class Partikel{
 		}
 		if(inside){
 			if(e.klick){
-				this.herde.stealFocus(this);
+				this.swarm.stealFocus(this);
 				this.refresh();
 			}
 			else if(e.doubleklick){
 				if(this.focused){
-					if(this.herde.focusedParticles.length > 1){
-						this.herde.setFocus(this, false);
+					if(this.swarm.focusedParticles.length > 1){
+						this.swarm.setFocus(this, false);
 						this.refresh();
 					}
 				}
 				else{
-					this.herde.setMainFocus(this);
+					this.swarm.setMainFocus(this);
 					this.refresh();
 				}
 			}

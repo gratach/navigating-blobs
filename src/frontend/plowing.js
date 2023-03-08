@@ -1,10 +1,10 @@
-/*
+/**
  * Helper to remove old particles and replace them by newer ones
  */
 export class Plow{
-	constructor(herde){
-		this.herde = herde;
-		this.maxParticles = herde.maxParticles;
+	constructor(swarm){
+		this.swarm = swarm;
+		this.maxParticles = swarm.maxParticles;
 		this.waitForPlowing = false;
 		this.totalCount = null;
 	}
@@ -13,7 +13,7 @@ export class Plow{
 		this.farthestOut = 0;
 		this.closestOut = 100000000;
 		this.totalCount = 0;
-		for(let x of this.herde.allParticles){
+		for(let x of this.swarm.allParticles){
 			if(x.solid){
 				if(x.distance > this.farthestIn)
 					this.farthestIn = x.distance;
@@ -33,7 +33,7 @@ export class Plow{
 	}
 	plowLayer(){
 		// remove all particles that are unconnected to focus
-		for(let x of this.herde.partikels){
+		for(let x of this.swarm.particles){
 			if(x.solid && x.distance == -1){
 				x.vanish();
 				this.totalCount -= 1;
@@ -44,12 +44,12 @@ export class Plow{
 		if(this.farthestIn > this.closestOut || this.maxParticles < this.totalCount){
 			// find how mutch space is neaded
 			let spaceNeaded = this.totalCount - this.maxParticles;
-			for(let x of this.herde.allParticles){
+			for(let x of this.swarm.allParticles){
 				if(!x.solid && x.distance < this.farthestIn)
 					spaceNeaded += 1;
 			}
 			// iterate to remove particles
-			for(let x of this.herde.partikels){
+			for(let x of this.swarm.particles){
 				if(spaceNeaded <= 0){
 					this.farthestIn += 1;
 					break;
@@ -64,7 +64,7 @@ export class Plow{
 		}
 		
 		//add particles to lowest layer if necessary
-		for(let x of this.herde.allParticles){
+		for(let x of this.swarm.allParticles){
 			if(this.totalCount >= this.maxParticles){
 				this.closestOut -= 1;
 				break;

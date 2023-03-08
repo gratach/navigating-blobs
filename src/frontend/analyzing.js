@@ -1,9 +1,9 @@
-/*
+/**
  * Analyzes a web of particles and finds out the distance in steps from the focused elements
  */
 export class Analyzer{
-	constructor(herde){
-		this.herde = herde;
+	constructor(swarm){
+		this.swarm = swarm;
 		this.analyzationIndex = 0;
 	}
 	// Create some unique number to mark the already measured particles
@@ -14,15 +14,15 @@ export class Analyzer{
 	}
 	analyze(){
 		let index = this.newAnalyzationIndex();
-		for(let x of this.herde.focusedParticles)
+		for(let x of this.swarm.focusedParticles)
 			this.analyzeLayer(x, 0, x, index);
-		for(let x of this.herde.allParticles){
+		for(let x of this.swarm.allParticles){
 			if(x.analyzationIndex != index){
 				x.distance = -1;
 				x.closestFocus = null;
 			}
 		}
-		this.herde.plow.startPlowing();
+		this.swarm.plow.startPlowing();
 	}
 	analyzeLayer(target, distance, closest, index){
 		if(target.analyzationIndex != this.analyzationIndex || distance < target.distance){

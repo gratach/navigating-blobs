@@ -1,8 +1,8 @@
-export class Pfeil{
+export class Arrow{
 	constructor(von, zu){
 		this.from = von;
 		this.to = zu;
-		this.herde = von.herde;
+		this.swarm = von.swarm;
 		this.from.addConnection(this);
 		this.to.addConnection(this);
 		this.fromSatelite = null;
@@ -17,13 +17,13 @@ export class Pfeil{
 	draw(leinwand, zeit){
 		
 		// only draw once per frame
-		if(this.lastDrawnFrameNumber != this.herde.frameNumber){
-			this.lastDrawnFrameNumber = this.herde.frameNumber;
+		if(this.lastDrawnFrameNumber != this.swarm.frameNumber){
+			this.lastDrawnFrameNumber = this.swarm.frameNumber;
 			
 			var ctx = leinwand.context;
 			ctx.beginPath();
 			let scaleMin = Math.min(this.to.scale, this.from.scale);
-			ctx.lineWidth = this.herde.lineWidth * scaleMin;
+			ctx.lineWidth = this.swarm.lineWidth * scaleMin;
 			
 			let [[fromX, fromY], [toX, toY]] = this.from.closestPoints(this.to);
 			
@@ -35,7 +35,7 @@ export class Pfeil{
 				[satX, satY] = this.fromSatelite.getCoordinates();
 				[fromX, fromY] = [fromX + (satX - fromX) * fromSateliteScale, fromY + (satY - fromY) * fromSateliteScale];
 				[satX, satY] = [fromX, fromY];
-				sateliteWidth = fromSateliteScale * this.herde.sateliteWidth * this.from.scale;
+				sateliteWidth = fromSateliteScale * this.swarm.sateliteWidth * this.from.scale;
 			}
 			if(this.fromSatelite != null && this.to.visible && !this.to.going && !this.to.coming){
 				this.from.removeSatelite(this.fromSatelite);
@@ -47,7 +47,7 @@ export class Pfeil{
 				[satX, satY] = this.toSatelite.getCoordinates();
 				[toX, toY] = [toX + (satX - toX) * toSateliteScale, toY + (satY - toY) * toSateliteScale];
 				[satX, satY] = [toX, toY];
-				sateliteWidth = toSateliteScale * this.herde.sateliteWidth * this.to.scale;
+				sateliteWidth = toSateliteScale * this.swarm.sateliteWidth * this.to.scale;
 			}
 			if(this.toSatelite != null && this.from.visible && !this.from.going && !this.from.coming){
 				this.to.removeSatelite(this.toSatelite);
@@ -55,7 +55,7 @@ export class Pfeil{
 			}
 			
 			if(sateliteWidth != 0){
-				let sateliteHeight = sateliteWidth * this.herde.yStretch;
+				let sateliteHeight = sateliteWidth * this.swarm.yStretch;
 				ctx.fillStyle = "rgb(0,0,0)";
 				ctx.ellipse(satX, satY, sateliteWidth / 2, sateliteHeight / 2, 0, 0, 2 * Math.PI);
 				ctx.fill();
@@ -96,8 +96,8 @@ export class Pfeil{
 			return this.fromSatelite;
 		return null;
 	}
-	set_herde(herde){
-		this.herde = herde;
+	set_swarm(swarm){
+		this.swarm = swarm;
 		this.lastDrawnFrameNumber = -1;
 	}
 	handleMouse(e){

@@ -14,12 +14,12 @@ export class Satelite{
 		gap = ((gap % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
 		if(gap > Math.PI)
 			gap -= 2 * Math.PI;
-		let angleSpeed = this.particle.herde.sateliteAngleSpeed;
+		let angleSpeed = this.particle.swarm.sateliteAngleSpeed;
 		if(Math.abs(gap) < angleSpeed)
 			this.angle = this.destinationAngle;
 		else{
 			this.angle += gap < 0 ? angleSpeed : -angleSpeed;
-			this.particle.herde.refresh();
+			this.particle.swarm.refresh();
 		}
 		this.angle = ((this.angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
 		this.xDirection = Math.sin(this.angle);

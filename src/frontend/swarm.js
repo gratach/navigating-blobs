@@ -1,15 +1,22 @@
-import {Analyzer} from "./analyzer.js"
-import {Plow} from "./plow.js"
-/*
- * A group of partikels and arrows inbetween them, that can be drawn to a leinwand.
+import {Analyzer} from "./analyzing.js"
+import {Plow} from "./plowing.js"
+import {Dynamic} from "./dynamic.js"
+/**
+ * @module swarm
+ * @description This module contains all logic for the handling of the particles. It is acting as a connector of many other modules that are implementing some details.
  */
-export class Herde{
-	/*
-	 * Creates new herde from array of partikels and arrow links between them.
-	 * The Leinwand and dynamik needs to be specified later.
+
+/**
+ * Container class for all logic that is necessary to handle a group of particles linked by arrows, draw them to screen and manage user interaction
+ */
+export class Swarm{
+	/**
+	 * Creates new swarm from array of particles and arrow links between them.
+	 * The Leinwand and dynamic needs to be specified later.
+	 * 
 	 */
-	constructor( dynamik){
-		this.partikels = [];
+	constructor(){
+		this.particles = [];
 		this.allParticles = new Set();
 		this.links = [];
 		this.lineWidth = 4;
@@ -17,7 +24,6 @@ export class Herde{
 		this.particleWidth = 150;
 		this.todonew = false;
 		this.leinwand = null;
-		this.dynamik = dynamik;
 		this.noMouse = {"x" : null, "y" : null}
 		this.mousePosition = this.noMouse;
 		this.frameNumber = 0;
@@ -28,11 +34,23 @@ export class Herde{
 		
 		this.focusedParticles = [];
 		this.mainFocus = null;
+		
+		/** 
+		 * Implements logic for rearanging the particles on screen and making them move
+		 * @see Dynamic
+		 */
+		this.dynamic = new Dynamic(this);
+		
+		/** 
+		 * Implements logic for measuring the particles distance to the closest focused particle
+		 * @see Analyzer
+		 */
 		this.analyzer = new Analyzer(this)
 		
+		/** Implements logic for letting relevant particles appear at the visible screen and and making irrelevant particles vanish from there
+		 * @see Plow
+		 */
 		this.plow = new Plow(this)
-		
-		dynamik.set_herde(this);
 	}
 	//set focus value of particle to true or false
 	setFocus(particle, focusValue, analyze = true){
@@ -83,14 +101,14 @@ export class Herde{
 		this.leinwand = leinwand;
 	}
 	addParticle(particle){
-		if(this.partikels.indexOf(particle) == -1){
-			this.partikels.push(particle);
+		if(this.particles.indexOf(particle) == -1){
+			this.particles.push(particle);
 		}
 	}
 	removeParticle(particle){
-		let index = this.partikels.indexOf(particle);
+		let index = this.particles.indexOf(particle);
 		if(index != -1){
-			this.partikels.splice(index, 1);
+			this.particles.splice(index, 1);
 		}
 	}
 	
@@ -108,9 +126,9 @@ export class Herde{
 	 */
 	draw(leinwand, zeit){
 		this.todonew = false;
-		this.dynamik.rearange();
+		this.dynamic.rearange();
 		this.handleMouse();
-		for(let x of this.partikels){
+		for(let x of this.particles){
 			x.draw(leinwand, zeit);
 		}
 		this.frameNumber += 1;
@@ -128,7 +146,7 @@ export class Herde{
 			klick : klick,
 			doubleklick : doubleklick
 		}
-		for(let x of this.partikels){
+		for(let x of this.particles){
 			x.handleMouse(e);
 		}
 		for(let x of this.links){
