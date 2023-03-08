@@ -14,13 +14,13 @@ export class Arrow{
 		if(particle === this.to)
 			return this.from;
 	}
-	draw(leinwand, zeit){
+	draw(zeit){
 		
 		// only draw once per frame
-		if(this.lastDrawnFrameNumber != this.swarm.frameNumber){
-			this.lastDrawnFrameNumber = this.swarm.frameNumber;
+		if(this.lastDrawnFrameNumber != this.swarm.court.frameItem){
+			this.lastDrawnFrameNumber = this.swarm.court.frameItem;
 			
-			var ctx = leinwand.context;
+			var ctx = this.swarm.court.context;
 			ctx.beginPath();
 			let scaleMin = Math.min(this.to.scale, this.from.scale);
 			ctx.lineWidth = this.swarm.lineWidth * scaleMin;
@@ -100,7 +100,7 @@ export class Arrow{
 		this.swarm = swarm;
 		this.lastDrawnFrameNumber = -1;
 	}
-	handleMouse(e){
+	handleMouse(){
 		
 	}
 }

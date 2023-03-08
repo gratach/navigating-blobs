@@ -1,3 +1,9 @@
+/**
+ * @module dynamic
+ * @description This module implements the logic of the particles repelling and atracting each other and moving on the screen
+ */
+
+/** Element for handling the movement of the particles */
 export class Dynamic{
 	constructor(swarm){
 		this.movement = [];
@@ -35,8 +41,8 @@ export class Dynamic{
 		// Add repelling force from border
 		for(let i = 0; i < this.movement.length; i++){
 			let particle = this.swarm.particles[i];
-			this.movement[i][0] += this.borderPotential(particle.x - particle.width / 2, particle.scale) - this.borderPotential(this.swarm.width - particle.width / 2 - particle.x, particle.scale);
-			this.movement[i][1] += this.borderPotential(particle.y - particle.height / 2, particle.scale) - this.borderPotential(this.swarm.height - particle.height / 2 - particle.y, particle.scale);
+			this.movement[i][0] += this.borderPotential(particle.x - particle.width / 2, particle.scale) - this.borderPotential(this.swarm.court.width - particle.width / 2 - particle.x, particle.scale);
+			this.movement[i][1] += this.borderPotential(particle.y - particle.height / 2, particle.scale) - this.borderPotential(this.swarm.court.height - particle.height / 2 - particle.y, particle.scale);
 		}
 		// Add repelling force between particles
 		for(let i = 0; i < this.movement.length; i++){
@@ -64,7 +70,7 @@ export class Dynamic{
 			}
 		}
 		if(keepGoing){
-			this.swarm.refresh();
+			this.swarm.court.refresh();
 		}
 		
 		for(let x of this.swarm.particles)

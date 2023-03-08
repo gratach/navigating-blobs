@@ -1,9 +1,11 @@
 import {Analyzer} from "./analyzing.js"
 import {Plow} from "./plowing.js"
 import {Dynamic} from "./dynamic.js"
+import {SwarmMouseHandler} from "./mouseevents.js"
+import {Court} from "./visibility.js"
 /**
  * @module swarm
- * @description This module contains all logic for the handling of the particles. It is acting as a connector of many other modules that are implementing some details.
+ * @description This module contains all logic for the frontend. It is acting as a connector of many other modules that are implementing some details.
  */
 
 /**
@@ -15,7 +17,7 @@ export class Swarm{
 	 * The Leinwand and dynamic needs to be specified later.
 	 * 
 	 */
-	constructor(){
+	constructor(canvas){
 		this.particles = [];
 		this.allParticles = new Set();
 		this.links = [];
@@ -26,7 +28,6 @@ export class Swarm{
 		this.leinwand = null;
 		this.noMouse = {"x" : null, "y" : null}
 		this.mousePosition = this.noMouse;
-		this.frameNumber = 0;
 		
 		this.maxParticles = 10;
 		this.sateliteWidth = 10;
@@ -45,12 +46,22 @@ export class Swarm{
 		 * Implements logic for measuring the particles distance to the closest focused particle
 		 * @see Analyzer
 		 */
-		this.analyzer = new Analyzer(this)
+		this.analyzer = new Analyzer(this);
 		
 		/** Implements logic for letting relevant particles appear at the visible screen and and making irrelevant particles vanish from there
 		 * @see Plow
 		 */
-		this.plow = new Plow(this)
+		this.plow = new Plow(this);
+		
+		/** Implements logic for mouse events beeing handled
+		 * @see Plow
+		 */
+		this.mouse = new SwarmMouseHandler(this);
+		
+		/** Implements logic for mouse events beeing handled
+		 * @see Plow
+		 */
+		this.court = new Court(this, canvas);
 	}
 	//set focus value of particle to true or false
 	setFocus(particle, focusValue, analyze = true){
@@ -86,16 +97,11 @@ export class Swarm{
 			this.analyzer.analyze()
 	}
 	stealFocus(particle){
+		console.log("steal focus")
 		if(particle.closestFocus !== null){
 			this.setFocus(particle.closestFocus, false, false);
 		}
 		this.setMainFocus(particle);
-	}
-	get width(){
-		return this.leinwand.width;
-	}
-	get height(){
-		return this.leinwand.height;
 	}
 	set_leinwand(leinwand){
 		this.leinwand = leinwand;
@@ -110,47 +116,5 @@ export class Swarm{
 		if(index != -1){
 			this.particles.splice(index, 1);
 		}
-	}
-	
-	/*
-	 * To be called when the apperance of blobs and arrows have changed.
-	 */
-	refresh(){
-		if(!this.todonew && this.leinwand != null){
-			this.todonew = true;
-			this.leinwand.refresh();
-		}
-	}
-	/*
-	 * This function has to be called by the leinwand to redraw the szenario.
-	 */
-	draw(leinwand, zeit){
-		this.todonew = false;
-		this.dynamic.rearange();
-		this.handleMouse();
-		for(let x of this.particles){
-			x.draw(leinwand, zeit);
-		}
-		this.frameNumber += 1;
-	}
-	
-	mouseEvent(e){
-		this.mousePosition = [e.x, e.y];
-		this.handleMouse(e.klick, e.doubleklick);
-	}
-	
-	handleMouse(klick = false, doubleklick = false){
-		let e = {
-			x : this.mousePosition[0],
-			y : this.mousePosition[1],
-			klick : klick,
-			doubleklick : doubleklick
-		}
-		for(let x of this.particles){
-			x.handleMouse(e);
-		}
-		for(let x of this.links){
-			x.handleMouse(e);
-		};
 	}
 }

@@ -1,5 +1,12 @@
-import {Satelite} from "./satelite.js";
+/**
+ * @module particles
+ * @description This module acts as a container for all particle relatet logic.
+ */
 
+import {Satelite} from "./satelite.js";
+import {ParticleMouseHandler} from "./mouseevents.js";
+
+/** A class wrapping all logic behind a single particle */
 export class Particle{
 	/*
 	 * Creates some text bubble
@@ -34,6 +41,8 @@ export class Particle{
 		this.analyzationIndex = null;
 		this.distance = -1;
 		this.closestFocus = null;
+		
+		this.mouse = new ParticleMouseHandler(this);
 	}
 	delete(){
 		this.swarm.allParticles.delete(this);
@@ -45,7 +54,7 @@ export class Particle{
 	refresh(){
 		if(!this.todonew && this.swarm != null){
 			this.todonew = true;
-			this.swarm.refresh();
+			this.swarm.court.refresh();
 		}
 	}
 	get bufferHeight(){
@@ -79,7 +88,7 @@ export class Particle{
 			this.going = true;
 			for(let link of this.connections)
 				link.checkSatelites();
-			this.swarm.refresh();
+			this.swarm.court.refresh();
 		}
 	}
 	/*
@@ -102,7 +111,7 @@ export class Particle{
 					y += satelitePosition[1];
 				}
 			}
-			[this.x, this.y] =  number == 0 ? [this.swarm.width / 2, this.swarm.height / 2] : [x / number, y / number];
+			[this.x, this.y] =  number == 0 ? [this.swarm.court.width / 2, this.swarm.court.height / 2] : [x / number, y / number];
 			
 			this.swarm.addParticle(this);
 		}
@@ -122,13 +131,13 @@ export class Particle{
 			this.going = false;
 			for(let link of this.connections)
 				link.checkSatelites();
-			this.swarm.refresh();
+			this.swarm.court.refresh();
 		}
 	}
 	get solid(){
 		return this.visible && !this.going
 	}
-	draw(leinwand, time){
+	draw(time){
 		if(this.visible){
 			// Handle the coming or going animation scale change
 			if(this.coming){
@@ -140,7 +149,7 @@ export class Particle{
 					this.scale = 1;
 				}
 				else
-					this.swarm.refresh(); // Continue animation
+					this.swarm.court.refresh(); // Continue animation
 			}
 			else if(this.going){
 				this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
@@ -152,7 +161,7 @@ export class Particle{
 					this.hide();
 				}
 				else
-					this.swarm.refresh(); // Continue animation
+					this.swarm.court.refresh(); // Continue animation
 			}
 			else 
 				this.scale = 1;
@@ -197,7 +206,7 @@ export class Particle{
 			}
 			
 		}
-		var ctx = leinwand.context;
+		var ctx = this.swarm.court.context;
 		ctx.drawImage(this.canvas, this.x - this.canvas.width * this.scale / 2, this.y - this.canvas.height * this.scale / 2, this.canvas.width * this.scale, this.canvas.height * this.scale);
 		
 		ctx.fillStyle = "rgb(255,255,0)";
@@ -206,7 +215,7 @@ export class Particle{
 		
 		// Draw all the links conecting to this particle
 		for(let x of this.connections)
-			x.draw(leinwand, time);
+			x.draw(time);
 	}
 	/*
 	 * return the two closest points of the elipse of this particle and of one choosen neighbor
@@ -267,42 +276,6 @@ export class Particle{
 			if(connection.from === neighbor || connection.to === neighbor)
 				return true;
 		return false;
-	}
-	
-	/*
-	 * Checks if the mouse is hovering over particle and sets this.hover flag if so
-	 */
-	handleMouse(e){
-		let inside;
-		if(e.x === null)
-			inside = false;
-		else{
-			let relativeX = (e.x - this.x) * 2 / this.width;
-			let relativeY = (e.y - this.y) * 2 / this.height;
-			inside = relativeX * relativeX + relativeY * relativeY < 1;
-		}
-		if(inside){
-			if(e.klick){
-				this.swarm.stealFocus(this);
-				this.refresh();
-			}
-			else if(e.doubleklick){
-				if(this.focused){
-					if(this.swarm.focusedParticles.length > 1){
-						this.swarm.setFocus(this, false);
-						this.refresh();
-					}
-				}
-				else{
-					this.swarm.setMainFocus(this);
-					this.refresh();
-				}
-			}
-		}
-		if(inside != this.hover){
-			this.refresh();
-		}
-		this.hover = inside;
 	}
 	
 	addSatelite(link){

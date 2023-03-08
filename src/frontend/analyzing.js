@@ -1,4 +1,9 @@
 /**
+ * @module analyzing
+ * @description This module implements the logic of particles beeing focused
+ */
+
+/**
  * Analyzes a web of particles and finds out the distance in steps from the focused elements
  */
 export class Analyzer{

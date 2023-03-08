@@ -6,7 +6,9 @@ import {Dynamik} from "./frontend/dynamic.js"
 /*
  * Simple Programm to create some blobs and draw them to a canvas.
  */
-var h = new Swarm();
+
+var l = new Picture();
+var h = new Swarm(l.canvas);
 var p1 = new Particle(h, "Hallo, Das");
 var p2 = new Particle(h, "ist ein");
 var p3 = new Particle(h, "Test");
@@ -53,4 +55,3 @@ h.setFocus(p1, true)
 // 		ctx.fillText("Hi there " + zeit , w / 2, h / 2);
 // 	})
  
-var l = new Picture(h);

@@ -1,4 +1,9 @@
 /**
+ * @module plowing
+ * @description This module implements the logic of particles appearing and disappearing on screen
+ */
+
+/**
  * Helper to remove old particles and replace them by newer ones
  */
 export class Plow{

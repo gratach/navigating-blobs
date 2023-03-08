@@ -1,0 +1,135 @@
+/**
+ * @module mouseevents
+ * @description This module implements the logic of all mouse activities beeing handled
+ */
+
+/**
+ * The handler for global mouse events
+ */
+export class SwarmMouseHandler{
+	constructor(swarm){
+		/** The swarm containing this class */
+		this.swarm = swarm
+		
+		/** Bool to show if the mouse has doubleclicked recently */
+		this.doubleclicked = false;
+		
+		/** Bool to show if the mouse has clicked recently (This is not triggered on doubleclick)*/
+		this.clicked = false;
+		
+		/** x position of mouse */
+		this.x = undefined;
+		
+		/** y position of mouse */
+		this.y = undefined;
+		
+		this.justclicked = false;
+		this.secondClick = false;
+		this.internally = false;
+	}
+	
+	
+	/**
+	 * Function to handle mousedown event on canvas
+	 */
+	mouseDown(e){
+		if(!this.secondClick){
+			if(this.justclicked){
+				this.secondClick = true;
+				// Trigger doubleclick event
+				this.mouseEvent(e, false, true);
+			}
+			else{
+				this.justclicked = true;
+				setTimeout(()=>{
+					this.justclicked = false;
+					if(!this.secondClick){
+						// Trigger click event
+						this.mouseEvent(e, true);
+					}
+					this.secondClick = false;
+				}, 200)
+			}
+		}
+	}
+	
+	/**
+	 * Function to handle mousemove event on canvas
+	 */
+	mouseMove(e){
+		this.mouseEvent(e)
+	}
+	
+	/**
+	 * Function to trigger all mouse related interactions
+	 */
+	handleMouse(){
+		if(!this.internally){
+			this.clicked = false;
+			this.doubleclicked = false;
+		}
+		for(let x of this.swarm.particles){
+			x.mouse.handleMouse();
+		}
+		for(let x of this.swarm.links){
+			x.handleMouse();
+		};
+	}
+	
+	mouseEvent(e, click = false, doubleclick = false){
+		let rect = this.swarm.court.canvas.getBoundingClientRect();
+		this.x = (e.clientX - rect.left) * this.swarm.court.canvas.width / rect.width;
+		this.y = (e.clientY - rect.top) * this.swarm.court.canvas.height / rect.height;
+		this.clicked = click;
+		this.doubleclicked = doubleclick;
+		this.internally = true;
+		this.handleMouse();
+		this.internally = false;
+	}
+	
+}
+
+/**
+ * The handler for mouse events of one single particle
+ */
+export class ParticleMouseHandler{
+	constructor(particle){
+		this.particle = particle;
+		this.swarm = particle.swarm;
+	}
+	/**
+	 * Checks if the mouse is hovering over particle and sets this.hover flag if so
+	 */
+	handleMouse(){
+		let inside;
+		if(this.swarm.mouse.x === null)
+			inside = false;
+		else{
+			let relativeX = (this.swarm.mouse.x - this.particle.x) * 2 / this.particle.width;
+			let relativeY = (this.swarm.mouse.y - this.particle.y) * 2 / this.particle.height;
+			inside = relativeX * relativeX + relativeY * relativeY < 1;
+		}
+		if(inside){
+			if(this.swarm.mouse.clicked){
+				this.swarm.stealFocus(this.particle);
+				this.particle.refresh();
+			}
+			else if(this.swarm.mouse.doubleclicked){
+				if(this.particle.focused){
+					if(this.swarm.focusedParticles.length > 1){
+						this.swarm.setFocus(this.particle, false);
+						this.particle.refresh();
+					}
+				}
+				else{
+					this.swarm.setMainFocus(this.particle);
+					this.particle.refresh();
+				}
+			}
+		}
+		if(inside != this.particle.hover){
+			this.particle.refresh();
+		}
+		this.particle.hover = inside;
+	}
+}
