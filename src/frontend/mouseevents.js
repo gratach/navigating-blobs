@@ -93,6 +93,7 @@ export class ParticleMouseHandler{
 	constructor(particle){
 		this.particle = particle;
 		this.swarm = particle.swarm;
+		this.hover = false;
 	}
 	/**
 	 * Checks if the mouse is hovering over particle and sets this.hover flag if so
@@ -124,9 +125,9 @@ export class ParticleMouseHandler{
 				}
 			}
 		}
-		if(inside != this.particle.hover){
+		if(inside != this.hover){
 			this.particle.refresh();
 		}
-		this.particle.hover = inside;
+		this.hover = inside;
 	}
 }

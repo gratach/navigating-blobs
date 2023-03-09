@@ -34,15 +34,15 @@ export class Plow{
 		this.totalCount = 0;
 		for(let x of this.swarm.allParticles){
 			if(x.solid){
-				if(x.distance > this.farthestIn)
-					this.farthestIn = x.distance;
+				if(x.focus.distance > this.farthestIn)
+					this.farthestIn = x.focus.distance;
 				this.totalCount += 1;
 			}
 			else{
-				if(x.distance > this.farthestOut)
-					this.farthestOut = x.distance;
-				if(x.distance < this.closestOut)
-					this.closestOut = x.distance;
+				if(x.focus.distance > this.farthestOut)
+					this.farthestOut = x.focus.distance;
+				if(x.focus.distance < this.closestOut)
+					this.closestOut = x.focus.distance;
 			}
 		}
 		if(!this.waitForPlowing){
@@ -53,7 +53,7 @@ export class Plow{
 	plowLayer(){
 		// remove all particles that are unconnected to focus
 		for(let x of this.swarm.particles){
-			if(x.solid && x.distance == -1){
+			if(x.solid && x.focus.distance == -1){
 				x.vanish();
 				this.totalCount -= 1;
 			}
@@ -64,7 +64,7 @@ export class Plow{
 			// find how mutch space is neaded
 			let spaceNeaded = this.totalCount - this.maxParticles;
 			for(let x of this.swarm.allParticles){
-				if(!x.solid && x.distance < this.farthestIn)
+				if(!x.solid && x.focus.distance < this.farthestIn)
 					spaceNeaded += 1;
 			}
 			// iterate to remove particles
@@ -73,7 +73,7 @@ export class Plow{
 					this.farthestIn += 1;
 					break;
 				}
-				if(x.solid && (x.distance == this.farthestIn)){
+				if(x.solid && (x.focus.distance == this.farthestIn)){
 					x.vanish();
 					this.totalCount -= 1;
 					spaceNeaded -= 1;
@@ -88,7 +88,7 @@ export class Plow{
 				this.closestOut -= 1;
 				break;
 			}
-			if(!x.solid && x.distance == this.closestOut){
+			if(!x.solid && x.focus.distance == this.closestOut){
 				x.appear();
 				this.totalCount += 1;
 			}

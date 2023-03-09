@@ -1,12 +1,24 @@
+
+import {ArrowData} from "./structure.js";
+import {ArrowOrbit} from "./orbiting.js";
+
 export class Arrow{
 	constructor(von, zu){
-		this.from = von;
-		this.to = zu;
 		this.swarm = von.swarm;
-		this.from.addConnection(this);
-		this.to.addConnection(this);
-		this.fromSatelite = null;
-		this.toSatelite = null;
+		this.from.data.addConnection(this);
+		this.to.data.addConnection(this);
+		
+		/**
+		 * Implements logic for handling the semantic web connection of this arrow
+		 * @see ArrowData
+		 */
+		this.data = new ArrowData(this, text);
+		
+		/**
+		 * Implements logic for handling the satelites of this connection
+		 * @see ArrowOrbit
+		 */
+		this.orbit = new ArrowOrbit(this);
 	}
 	other(particle){
 		if(particle === this.from)

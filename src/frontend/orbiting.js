@@ -1,3 +1,7 @@
+
+
+
+
 export class Satelite{
 	constructor(particle, connection){
 		this.particle = particle

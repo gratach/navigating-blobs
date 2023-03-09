@@ -2,7 +2,7 @@ import {SwarmFocus} from "./focusing.js"
 import {Plow} from "./plowing.js"
 import {Dynamic} from "./dynamic.js"
 import {SwarmMouseHandler} from "./mouseevents.js"
-import {Court} from "./visibility.js"
+import {Court} from "./positioning.js"
 /**
  * @module swarm
  * @description This module contains all logic for the frontend. It is acting as a connector of many other modules that are implementing some details.
@@ -29,6 +29,7 @@ export class Swarm{
 		this.yStretch = 0.7;
 		this.particleWidth = 150;
 		
+		//satelites
 		this.sateliteWidth = 10;
 		this.sateliteAngleSpeed = 0.1;
 		
