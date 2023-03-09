@@ -31,8 +31,8 @@ export class Dynamic{
 		};
 	}
 	rearange(){
-		if(this.movement.length != this.swarm.particles.length)
-			this.movement = new Array(this.swarm.particles.length)
+		if(this.movement.length != this.swarm.spot.visualParticles.length)
+			this.movement = new Array(this.swarm.spot.visualParticles.length)
 			
 		// Set movement to zero
 		for(let i = 0; i < this.movement.length; i++){
@@ -40,17 +40,17 @@ export class Dynamic{
 		}	
 		// Add repelling force from border
 		for(let i = 0; i < this.movement.length; i++){
-			let particle = this.swarm.particles[i];
-			this.movement[i][0] += this.borderPotential(particle.x - particle.width / 2, particle.scale) - this.borderPotential(this.swarm.court.width - particle.width / 2 - particle.x, particle.scale);
-			this.movement[i][1] += this.borderPotential(particle.y - particle.height / 2, particle.scale) - this.borderPotential(this.swarm.court.height - particle.height / 2 - particle.y, particle.scale);
+			let particle = this.swarm.spot.visualParticles[i];
+			this.movement[i][0] += this.borderPotential(particle.spot.x - particle.spot.width / 2, particle.spot.scale) - this.borderPotential(this.swarm.spot.width - particle.spot.width / 2 - particle.spot.x, particle.spot.scale);
+			this.movement[i][1] += this.borderPotential(particle.spot.y - particle.spot.height / 2, particle.spot.scale) - this.borderPotential(this.swarm.spot.height - particle.spot.height / 2 - particle.spot.y, particle.spot.scale);
 		}
 		// Add repelling force between particles
 		for(let i = 0; i < this.movement.length; i++){
 			for(let j = i + 1; j < this.movement.length; j++){
-				let particle1 = this.swarm.particles[i];
-				let particle2 = this.swarm.particles[j];
-				let [[x1, y1], [x2, y2]] = particle1.closestPoints(particle2, 1);
-				let [xPush, yPush] = particle1.connectedWith(particle2) ? this.connectionPotential(x2 - x1, y2 - y1, particle1.scale * particle2.scale) : this.particlePotential(x2 - x1, y2 - y1, particle1.scale * particle2.scale);
+				let particle1 = this.swarm.spot.visualParticles[i];
+				let particle2 = this.swarm.spot.visualParticles[j];
+				let [[x1, y1], [x2, y2]] = particle1.spot.closestPoints(particle2, 1);
+				let [xPush, yPush] = particle1.data.connectedWith(particle2) ? this.connectionPotential(x2 - x1, y2 - y1, particle1.spot.scale * particle2.spot.scale) : this.particlePotential(x2 - x1, y2 - y1, particle1.spot.scale * particle2.spot.scale);
 				this.movement[i][0] += xPush;
 				this.movement[i][1] += yPush;
 				this.movement[j][0] -= xPush;
@@ -62,18 +62,19 @@ export class Dynamic{
 		let keepGoing = false;
 		// Shift particle position
 		for(var i = 0; i < this.movement.length; i++){
-			let particle = this.swarm.particles[i];
-			particle.x += this.movement[i][0];
-			particle.y += this.movement[i][1];
+			let particle = this.swarm.spot.visualParticles[i];
+			particle.spot.setPosition(particle.spot.x + this.movement[i][0], particle.spot.y + this.movement[i][1]);
+			// Keep animation going if movement is to big
 			if(Math.abs(this.movement[i][0]) > 0.5 || Math.abs(this.movement[i][1]) > 0.5){
 				keepGoing = true;
 			}
 		}
 		if(keepGoing){
-			this.swarm.court.refresh();
+			//Trigger next animation frame
+			this.swarm.spot.refresh();
 		}
 		
-		for(let x of this.swarm.particles)
-			x.updateSateliteAngles();
+		for(let x of this.swarm.spot.visualParticles)
+			x.orbit.updateSateliteAngles();
 	}
 }

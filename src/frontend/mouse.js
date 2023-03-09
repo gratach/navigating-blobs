@@ -68,15 +68,15 @@ export class SwarmMouseHandler{
 			this.clicked = false;
 			this.doubleclicked = false;
 		}
-		for(let x of this.swarm.particles){
+		for(let x of this.swarm.spot.visualParticles){
 			x.mouse.handleMouse();
 		}
 	}
 	
 	mouseEvent(e, click = false, doubleclick = false){
-		let rect = this.swarm.court.canvas.getBoundingClientRect();
-		this.x = (e.clientX - rect.left) * this.swarm.court.canvas.width / rect.width;
-		this.y = (e.clientY - rect.top) * this.swarm.court.canvas.height / rect.height;
+		let rect = this.swarm.spot.canvas.getBoundingClientRect();
+		this.x = (e.clientX - rect.left) * this.swarm.spot.canvas.width / rect.width;
+		this.y = (e.clientY - rect.top) * this.swarm.spot.canvas.height / rect.height;
 		this.clicked = click;
 		this.doubleclicked = doubleclick;
 		this.internally = true;

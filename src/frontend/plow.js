@@ -9,18 +9,14 @@
 export class Plow{
 	constructor(swarm){
 		this.swarm = swarm;
+		/** The maximal particle number */
 		this.maxParticles = 10;
 		this.waitForPlowing = false;
 		this.totalCount = null;
 	}
 	
-	/**
-	 * The maximal particle number
-	 */
-	get maximalParticleNumber(){
-		return this.maxParticles;
-	}
-	set maximalParticleNumber(value){
+	/** set the maximal particle number */
+	setMaxParticles(value){
 		this.maxParticles = maximalParticleNumber();
 		this.startPlowing();
 	}
@@ -33,7 +29,7 @@ export class Plow{
 		this.closestOut = 100000000;
 		this.totalCount = 0;
 		for(let x of this.swarm.allParticles){
-			if(x.solid){
+			if(x.spot.solid){
 				if(x.focus.distance > this.farthestIn)
 					this.farthestIn = x.focus.distance;
 				this.totalCount += 1;
@@ -52,9 +48,9 @@ export class Plow{
 	}
 	plowLayer(){
 		// remove all particles that are unconnected to focus
-		for(let x of this.swarm.particles){
-			if(x.solid && x.focus.distance == -1){
-				x.vanish();
+		for(let x of this.swarm.spot.visualParticles){
+			if(x.spot.solid && x.focus.distance == -1){
+				x.spot.vanish();
 				this.totalCount -= 1;
 			}
 		}
@@ -64,17 +60,17 @@ export class Plow{
 			// find how mutch space is neaded
 			let spaceNeaded = this.totalCount - this.maxParticles;
 			for(let x of this.swarm.allParticles){
-				if(!x.solid && x.focus.distance < this.farthestIn)
+				if(!x.spot.solid && x.focus.distance < this.farthestIn)
 					spaceNeaded += 1;
 			}
 			// iterate to remove particles
-			for(let x of this.swarm.particles){
+			for(let x of this.swarm.spot.visualParticles){
 				if(spaceNeaded <= 0){
 					this.farthestIn += 1;
 					break;
 				}
-				if(x.solid && (x.focus.distance == this.farthestIn)){
-					x.vanish();
+				if(x.spot.solid && (x.focus.distance == this.farthestIn)){
+					x.spot.vanish();
 					this.totalCount -= 1;
 					spaceNeaded -= 1;
 				}
@@ -88,8 +84,8 @@ export class Plow{
 				this.closestOut -= 1;
 				break;
 			}
-			if(!x.solid && x.focus.distance == this.closestOut){
-				x.appear();
+			if(!x.spot.solid && x.focus.distance == this.closestOut){
+				x.spot.appear();
 				this.totalCount += 1;
 			}
 		}

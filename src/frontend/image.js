@@ -21,7 +21,7 @@ export class ParticleImage{
 	refresh(){
 		if(!this.todonew && this.swarm != null){
 			this.todonew = true;
-			this.swarm.court.refresh();
+			this.swarm.spot.refresh();
 		}
 	}
 	
@@ -37,7 +37,7 @@ export class ParticleImage{
 					this.scale = 1;
 				}
 				else
-					this.swarm.court.refresh(); // Continue animation
+					this.swarm.spot.refresh(); // Continue animation
 			}
 			else if(this.going){
 				this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
@@ -49,7 +49,7 @@ export class ParticleImage{
 					this.hide();
 				}
 				else
-					this.swarm.court.refresh(); // Continue animation
+					this.swarm.spot.refresh(); // Continue animation
 			}
 			else 
 				this.scale = 1;
@@ -94,7 +94,7 @@ export class ParticleImage{
 			}
 			
 		}
-		var ctx = this.swarm.court.context;
+		var ctx = this.swarm.spot.context;
 		ctx.drawImage(this.canvas, this.x - this.canvas.width * this.scale / 2, this.y - this.canvas.height * this.scale / 2, this.canvas.width * this.scale, this.canvas.height * this.scale);
 		
 		ctx.fillStyle = "rgb(255,255,0)";
@@ -122,10 +122,10 @@ export class ArrowImage{
 	draw(zeit){
 		
 		// only draw once per frame
-		if(this.lastDrawnFrameNumber != this.swarm.court.frameItem){
-			this.lastDrawnFrameNumber = this.swarm.court.frameItem;
+		if(this.lastDrawnFrameNumber != this.swarm.spot.frameItem){
+			this.lastDrawnFrameNumber = this.swarm.spot.frameItem;
 			
-			var ctx = this.swarm.court.context;
+			var ctx = this.swarm.spot.context;
 			ctx.beginPath();
 			let scaleMin = Math.min(this.to.scale, this.from.scale);
 			ctx.lineWidth = this.swarm.lineWidth * scaleMin;

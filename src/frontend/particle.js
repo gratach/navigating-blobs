@@ -1,15 +1,14 @@
 /**
- * @module particles
+ * @module particle
  * @description This module acts as a container for all particle relatet logic.
  */
 
-import {Satelite} from "./satelite.js";
-import {ParticleMouseHandler} from "./mouseevents.js";
-import {ParticleFocus} from "./focusing.js";
-import {Spot} from "./positioning.js";
-import {ParticleImage} from "./painting.js";
-import {ParticleData} from "./structure.js";
-import {ParicleOrbit} from "./orbiting.js";
+import {ParticleMouseHandler} from "./mouse.js";
+import {ParticleFocus} from "./focus.js";
+import {Spot} from "./spot.js";
+import {ParticleImage} from "./image.js";
+import {ParticleData} from "./data.js";
+import {ParticleOrbit} from "./orbit.js";
 
 /** A class wrapping all logic behind a single particle */
 export class Particle{
@@ -33,28 +32,28 @@ export class Particle{
 		 * Implements logic for positioning the particle on the visible screen
 		 * @see Spot
 		 */
-		this.spot = new Spot(this)
+		this.spot = new Spot(this);
 		
 		/**
 		 * Implements logic for drawing the particle to the screen
 		 * @see ParticleImage
 		 */
-		this.painting = new ParticleImage(this)
+		this.image = new ParticleImage(this);
 		
 		/**
 		 * Implements logic for handling the semantic web node of this particle
 		 * @see ParticleData
 		 */
-		this.data = new ParticleData(this, text)
+		this.data = new ParticleData(this, text);
 		
 		/**
 		 * Implements logic for handling the orbiting satelites of this particle
 		 * @see ParicleOrbit
 		 */
-		this.orbit = new ParticleOrbit(this, text)
+		this.orbit = new ParticleOrbit(this, text);
 		
 		
 		this.swarm.allParticles.add(this);
-		this.painting.refresh();
+		this.image.refresh();
 	}
 }

@@ -42,21 +42,21 @@ export class SwarmFocus{
 		for(let x of this.focusedParticles)
 			this.analyzeLayer(x, 0, x, index);
 		for(let x of this.swarm.allParticles){
-			if(x.analyzationIndex != index){
-				x.distance = -1;
+			if(x.focus.analyzationIndex != index){
+				x.focus.distance = -1;
 				x.focus.closestFocus = null;
 			}
 		}
 		this.swarm.plow.startPlowing();
 	}
 	analyzeLayer(target, distance, closest, index){
-		if(target.analyzationIndex != this.analyzationIndex || distance < target.distance){
-			target.distance = distance;
+		if(target.focus.analyzationIndex != this.analyzationIndex || distance < target.focus.distance){
+			target.focus.distance = distance;
 			target.focus.closestFocus = closest;
-			target.analyzationIndex = index;
+			target.focus.analyzationIndex = index;
 			distance += 1;
-			for(let x of target.connections)
-				this.analyzeLayer(x.other(target), distance, closest, index)
+			for(let x of target.data.connections)
+				this.analyzeLayer(x.data.other(target), distance, closest, index)
 		}
 	}
 	//set focus value of particle to true or false
@@ -78,7 +78,7 @@ export class SwarmFocus{
 				}
 			}
 			particle.focus.focused = focusValue;
-			particle.refresh();
+			particle.image.refresh();
 			if(analyze)
 				this.analyze();
 		}
@@ -95,6 +95,8 @@ export class ParticleFocus{
 		this.closestFocus = null;
 		this.particle = particle;
 		this.swarm = particle.swarm;
+		this.analyzationIndex = null;
+		this.distance = -1;
 	}
 	/** returns true if particle is in focus */
 	isFocused(){
