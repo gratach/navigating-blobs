@@ -13,7 +13,9 @@ export class SwarmData{
 		this.swarm = swarm;
 		this.allParticles = new Set();
 	}
-	
+	addParticle(particle){
+		this.allParticles.add(particle);
+	}
 }
 
 
