@@ -47,7 +47,7 @@ export class Particle{
 		this.data = new ParticleData(this, text);
 		
 		/**
-		 * Implements logic for handling the orbiting satelites of this particle
+		 * Implements logic for handling the orbiting satellites of this particle
 		 * @see ParicleOrbit
 		 */
 		this.orbit = new ParticleOrbit(this, text);

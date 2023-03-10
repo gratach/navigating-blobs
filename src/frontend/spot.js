@@ -119,7 +119,7 @@ export class Spot{
 			this.coming = false;
 			this.going = true;
 			for(let link of this.particle.data.connections)
-				link.orbit.checkSatelites();
+				link.orbit.checkSatellites();
 			this.swarm.screen.refresh();
 		}
 	}
@@ -137,7 +137,7 @@ export class Spot{
 			this.coming = true;
 			this.going = false;
 			for(let link of this.particle.data.connections)
-				link.orbit.checkSatelites();
+				link.orbit.checkSatellites();
 			this.swarm.screen.refresh();
 		}
 	}
@@ -201,7 +201,7 @@ export class Spot{
 		this.visible = false;
 		this.swarm.spot.removeVisualParticle(this.particle);
 		for(let link of this.particle.data.connections)
-			link.orbit.checkSatelites();
+			link.orbit.checkSatellites();
 	}
 	// Internal function to make a particle appear
 	show(){
@@ -213,12 +213,12 @@ export class Spot{
 			let [x, y] = [0, 0];
 			let number = 0;
 			for(let link of this.particle.data.connections){
-				let satelite = link.orbit.sateliteRepresentation(this.particle);
-				if(satelite !== null){
+				let satellite = link.orbit.satelliteRepresentation(this.particle);
+				if(satellite !== null){
 					number += 1;
-					let satelitePosition = satelite.getCoordinates();
-					x += satelitePosition[0];
-					y += satelitePosition[1];
+					let satellitePosition = satellite.getCoordinates();
+					x += satellitePosition[0];
+					y += satellitePosition[1];
 				}
 			}
 			[this.x, this.y] = number == 0 ? [this.swarm.screen.width / 2, this.swarm.screen.height / 2] : [x / number, y / number];

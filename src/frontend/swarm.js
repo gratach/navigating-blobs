@@ -23,9 +23,9 @@ export class Swarm{
 	 */
 	constructor(canvas){
 		
-		//satelites
-		this.sateliteWidth = 10;
-		this.sateliteAngleSpeed = 0.1;
+		//satellites
+		this.satelliteWidth = 10;
+		this.satelliteAngleSpeed = 0.1;
 		
 		/** 
 		 * Implements logic for rearanging the particles on screen and making them move

@@ -19,13 +19,13 @@ export class Arrow{
 		this.data = new ArrowData(this, fromParticle, toParticle);
 		
 		/**
-		 * Implements logic for handling the satelites of this connection
+		 * Implements logic for handling the satellites of this connection
 		 * @see ArrowOrbit
 		 */
 		this.orbit = new ArrowOrbit(this);
 		
 		/**
-		 * Implements logic for handling the satelites of this connection
+		 * Implements logic for handling the satellites of this connection
 		 * @see ArrowImage
 		 */
 		this.image = new ArrowImage(this);

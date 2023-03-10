@@ -124,8 +124,8 @@ export class ArrowImage{
 			let fromParticle = this.arrow.data.from;
 			let toSpot = toParticle.spot;
 			let fromSpot = fromParticle.spot;
-			let fromSatelite = this.arrow.orbit.fromSatelite;
-			let toSatelite = this.arrow.orbit.toSatelite;
+			let fromSatellite = this.arrow.orbit.fromSatellite;
+			let toSatellite = this.arrow.orbit.toSatellite;
 			
 			var ctx = this.swarm.screen.context;
 			ctx.beginPath();
@@ -135,36 +135,36 @@ export class ArrowImage{
 			let [[fromX, fromY], [toX, toY]] = fromSpot.closestPoints(toParticle);
 			
 			let satX, satY;
-			let sateliteWidth = 0;
+			let satelliteWidth = 0;
 			
-			let fromSateliteScale = Math.max(0, fromSpot.scale - toSpot.scale);
-			if(fromSateliteScale > 0){
-				[satX, satY] = fromSatelite.getCoordinates();
-				[fromX, fromY] = [fromX + (satX - fromX) * fromSateliteScale, fromY + (satY - fromY) * fromSateliteScale];
+			let fromSatelliteScale = Math.max(0, fromSpot.scale - toSpot.scale);
+			if(fromSatelliteScale > 0){
+				[satX, satY] = fromSatellite.getCoordinates();
+				[fromX, fromY] = [fromX + (satX - fromX) * fromSatelliteScale, fromY + (satY - fromY) * fromSatelliteScale];
 				[satX, satY] = [fromX, fromY];
-				sateliteWidth = fromSateliteScale * this.swarm.sateliteWidth * fromSpot.scale;
+				satelliteWidth = fromSatelliteScale * this.swarm.satelliteWidth * fromSpot.scale;
 			}
-			if(fromSatelite != null && toSpot.visible && !toSpot.going && !toSpot.coming){
-				fromParticle.orbit.removeSatelite(fromSatelite);
-				this.arrow.orbit.fromSatelite = null;
+			if(fromSatellite != null && toSpot.visible && !toSpot.going && !toSpot.coming){
+				fromParticle.orbit.removeSatellite(fromSatellite);
+				this.arrow.orbit.fromSatellite = null;
 			}
 			
-			let toSateliteScale = Math.max(0, toSpot.scale - fromSpot.scale);
-			if(toSateliteScale > 0){
-				[satX, satY] = toSatelite.getCoordinates();
-				[toX, toY] = [toX + (satX - toX) * toSateliteScale, toY + (satY - toY) * toSateliteScale];
+			let toSatelliteScale = Math.max(0, toSpot.scale - fromSpot.scale);
+			if(toSatelliteScale > 0){
+				[satX, satY] = toSatellite.getCoordinates();
+				[toX, toY] = [toX + (satX - toX) * toSatelliteScale, toY + (satY - toY) * toSatelliteScale];
 				[satX, satY] = [toX, toY];
-				sateliteWidth = toSateliteScale * this.swarm.sateliteWidth * toSpot.scale;
+				satelliteWidth = toSatelliteScale * this.swarm.satelliteWidth * toSpot.scale;
 			}
-			if(toSatelite != null && fromSpot.visible && !fromSpot.going && !fromSpot.coming){
-				toParticle.orbit.removeSatelite(toSatelite);
-				this.arrow.orbit.toSatelite = null;
+			if(toSatellite != null && fromSpot.visible && !fromSpot.going && !fromSpot.coming){
+				toParticle.orbit.removeSatellite(toSatellite);
+				this.arrow.orbit.toSatellite = null;
 			}
 			
-			if(sateliteWidth != 0){
-				let sateliteHeight = sateliteWidth * this.swarm.spot.standardYStretch;
+			if(satelliteWidth != 0){
+				let satelliteHeight = satelliteWidth * this.swarm.spot.standardYStretch;
 				ctx.fillStyle = "rgb(0,0,0)";
-				ctx.ellipse(satX, satY, sateliteWidth / 2, sateliteHeight / 2, 0, 0, 2 * Math.PI);
+				ctx.ellipse(satX, satY, satelliteWidth / 2, satelliteHeight / 2, 0, 0, 2 * Math.PI);
 				ctx.fill();
 			}
 			

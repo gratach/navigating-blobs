@@ -103,30 +103,30 @@ export class ParticleMouseHandler{
 		if(this.swarm.mouse.x === null)
 			inside = false;
 		else{
-			let relativeX = (this.swarm.mouse.x - this.particle.x) * 2 / this.particle.width;
-			let relativeY = (this.swarm.mouse.y - this.particle.y) * 2 / this.particle.height;
+			let relativeX = (this.swarm.mouse.x - this.particle.spot.x) * 2 / this.particle.spot.width;
+			let relativeY = (this.swarm.mouse.y - this.particle.spot.y) * 2 / this.particle.spot.height;
 			inside = relativeX * relativeX + relativeY * relativeY < 1;
 		}
 		if(inside){
 			if(this.swarm.mouse.clicked){
 				this.particle.focus.stealFocus();
-				this.particle.refresh();
+				this.particle.image.refresh();
 			}
 			else if(this.swarm.mouse.doubleclicked){
 				if(this.particle.focus.focused){
 					if(this.swarm.focus.countFocus() > 1){
 						this.particle.focus.setFocus(false);
-						this.particle.refresh();
+						this.particle.image.refresh();
 					}
 				}
 				else{
 					this.particle.focus.setMainFocus(this.particle);
-					this.particle.refresh();
+					this.particle.image.refresh();
 				}
 			}
 		}
 		if(inside != this.hover){
-			this.particle.refresh();
+			this.particle.image.refresh();
 		}
 		this.hover = inside;
 	}

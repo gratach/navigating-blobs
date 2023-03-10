@@ -75,6 +75,6 @@ export class Dynamic{
 		}
 		
 		for(let x of this.swarm.spot.visualParticles)
-			x.orbit.updateSateliteAngles();
+			x.orbit.updateSatelliteAngles();
 	}
 }

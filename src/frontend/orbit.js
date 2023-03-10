@@ -1,30 +1,30 @@
 /**
  * @module orbiting
- * @description This module implements the logic of satelite spots surrounding the particles
+ * @description This module implements the logic of satellite spots surrounding the particles
  */
 
 
 /**
- * An orbit of a particle that can contain satelites
+ * An orbit of a particle that can contain satellites
  */
 export class ParticleOrbit{
 	constructor(particle){
 		this.particle = particle;
 		
-		this.satelites = [];
+		this.satellites = [];
 	}
 	
-	addSatelite(link){
-		let satelite = new Satelite(this.particle, link);
-		this.satelites.push(satelite);
-		return satelite;
+	addSatellite(link){
+		let satellite = new Satellite(this.particle, link);
+		this.satellites.push(satellite);
+		return satellite;
 	}
-	removeSatelite(satelite){
-		let indexOf = this.satelites.indexOf(satelite);
+	removeSatellite(satellite){
+		let indexOf = this.satellites.indexOf(satellite);
 		if(indexOf != -1)
-			this.satelites.splice(indexOf, 1);
+			this.satellites.splice(indexOf, 1);
 	}
-	updateSateliteAngles(){
+	updateSatelliteAngles(){
 		let angle = 0;
 		for(let x of this.particle.data.connections){
 			let other = x.data.other(this.particle)
@@ -32,9 +32,9 @@ export class ParticleOrbit{
 				angle += Math.atan2(other.spot.x - this.particle.spot.x, other.spot.y - this.particle.spot.y);
 			}
 		}
-		let offset = Math.PI * 2 / this.satelites.length;
+		let offset = Math.PI * 2 / this.satellites.length;
 		angle += offset / 2;
-		for(let x of this.satelites){
+		for(let x of this.satellites){
 			x.setDestinationAngle(angle);
 			angle += offset;
 		}
@@ -43,50 +43,50 @@ export class ParticleOrbit{
 
 
 /**
- * An orbit of a connection containing one satelite for each end
+ * An orbit of a connection containing one satellite for each end
  */
 export class ArrowOrbit{
 	constructor(arrow){
 		this.arrow = arrow;
-		this.fromSatelite = null;
-		this.toSatelite = null;
+		this.fromSatellite = null;
+		this.toSatellite = null;
 	}
 	
-	// Manages the existance of satelites
-	checkSatelites(){
+	// Manages the existance of satellites
+	checkSatellites(){
 		let fromParticle = this.arrow.data.from;
 		let toParticle = this.arrow.data.to;
 		let fromSatelitShouldExist = fromParticle.spot.visible && (!toParticle.spot.visible || toParticle.spot.coming || toParticle.spot.going);
-		if(fromSatelitShouldExist && this.fromSatelite == null)
-			this.fromSatelite = fromParticle.orbit.addSatelite(this);
-		else if(!fromSatelitShouldExist && this.fromSatelite != null){
-			fromParticle.orbit.removeSatelite(this.fromSatelite);
-			this.fromSatelite = null;
+		if(fromSatelitShouldExist && this.fromSatellite == null)
+			this.fromSatellite = fromParticle.orbit.addSatellite(this);
+		else if(!fromSatelitShouldExist && this.fromSatellite != null){
+			fromParticle.orbit.removeSatellite(this.fromSatellite);
+			this.fromSatellite = null;
 		}
 			
 		let toSatelitShouldExist = toParticle.spot.visible && (!fromParticle.spot.visible || fromParticle.spot.coming || fromParticle.spot.going);
-		if(toSatelitShouldExist && this.toSatelite == null)
-			this.toSatelite = toParticle.orbit.addSatelite(this);
-		else if(!toSatelitShouldExist && this.toSatelite != null){
-			toParticle.orbit.removeSatelite(this.toSatelite);
-			this.toSatelite = null;
+		if(toSatelitShouldExist && this.toSatellite == null)
+			this.toSatellite = toParticle.orbit.addSatellite(this);
+		else if(!toSatelitShouldExist && this.toSatellite != null){
+			toParticle.orbit.removeSatellite(this.toSatellite);
+			this.toSatellite = null;
 		}
 	}
 	
-	// Get the satelite representing this particle if anny
-	sateliteRepresentation(particle){
+	// Get the satellite representing this particle if anny
+	satelliteRepresentation(particle){
 		if(this.arrow.data.from === particle)
-			return this.toSatelite;
+			return this.toSatellite;
 		if(this.arrow.data.to === particle)
-			return this.fromSatelite;
+			return this.fromSatellite;
 		return null;
 	}
 }
 
 /**
- * A single satelite spot that represents a connection of a particle
+ * A single satellite spot that represents a connection of a particle
  */
-export class Satelite{
+export class Satellite{
 	constructor(particle, connection){
 		this.particle = particle
 		this.connection  = connection;
@@ -102,7 +102,7 @@ export class Satelite{
 		gap = ((gap % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
 		if(gap > Math.PI)
 			gap -= 2 * Math.PI;
-		let angleSpeed = this.particle.swarm.sateliteAngleSpeed;
+		let angleSpeed = this.particle.swarm.satelliteAngleSpeed;
 		if(Math.abs(gap) >= angleSpeed){
 			this.angle += gap < 0 ? angleSpeed : -angleSpeed;
 			this.particle.swarm.screen.refresh();
