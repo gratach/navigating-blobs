@@ -8,7 +8,6 @@
  */
  export class SwarmScreen{
 	constructor(swarm, canvas){
-		
 		this.todonew = false;
 		/** An unique item that identifyes the current frame. This can be helpfull´ to prevent that elements are been drawn twice. */
 		this.frameItem = 0;
@@ -20,7 +19,7 @@
 		this.context = this.canvas.getContext("2d");
 		canvas.onmousedown = (e)=>{this.swarm.mouse.mouseDown(e)};
 		canvas.onmousemove = (e)=>{this.swarm.mouse.mouseMove(e)};
-		canvas.onresize = ()=>{this.onResize()};
+		window.onresize = ()=>{console.log("test"); this.onResize()};
 		
 		/** The width of the canvas in pixel */
 		this.width = null;
@@ -51,7 +50,6 @@
 	}
 	
 	draw(zeit){
-		console.log("draw")
 		this.todonew = false;
 		
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)

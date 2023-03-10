@@ -105,7 +105,6 @@ export class Spot{
 		}
 		else 
 			this.scale = 1;
-		console.log(this.scale)
 	}
 	
 	// Start the process of making a particle vanish
@@ -222,7 +221,7 @@ export class Spot{
 					y += satelitePosition[1];
 				}
 			}
-			[this.x, this.y] = [this.swarm.screen.width / 2, this.swarm.screen.height / 2];// number == 0 ? [this.swarm.screen.width / 2, this.swarm.screen.height / 2] : [x / number, y / number];
+			[this.x, this.y] = number == 0 ? [this.swarm.screen.width / 2, this.swarm.screen.height / 2] : [x / number, y / number];
 			
 			this.swarm.spot.addVisualParticle(this.particle);
 		}

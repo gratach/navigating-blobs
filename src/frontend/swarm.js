@@ -23,11 +23,6 @@ export class Swarm{
 	 */
 	constructor(canvas){
 		
-		//drawing
-		this.lineWidth = 4;
-		this.yStretch = 0.7;
-		this.particleWidth = 150;
-		
 		//satelites
 		this.sateliteWidth = 10;
 		this.sateliteAngleSpeed = 0.1;

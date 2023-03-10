@@ -91,8 +91,7 @@ export class ParticleImage{
 			
 		}
 		let ctx = this.swarm.screen.context;
-		let scale = this.particle.spot.scale
-		console.log(this.particle.spot.x - this.canvas.width * this.particle.spot.scale / 2, this.y - this.canvas.height * scale / 2, this.canvas.width * scale, this.canvas.height * scale)
+		let scale = this.particle.spot.scale;
 		ctx.drawImage(this.canvas, this.particle.spot.x - this.canvas.width * this.particle.spot.scale / 2, this.particle.spot.y - this.canvas.height * scale / 2, this.canvas.width * scale, this.canvas.height * scale);
 		
 		ctx.fillStyle = "rgb(255,255,0)";
@@ -115,7 +114,6 @@ export class ArrowImage{
 		this.swarm = arrow.swarm;
 	}
 	draw(zeit){
-		
 		// only draw once per frame
 		if(this.lastDrawnFrameNumber != this.swarm.spot.frameItem){
 			this.lastDrawnFrameNumber = this.swarm.spot.frameItem;

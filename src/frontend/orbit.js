@@ -28,8 +28,8 @@ export class ParticleOrbit{
 		let angle = 0;
 		for(let x of this.particle.data.connections){
 			let other = x.data.other(this.particle)
-			if(other.visible && !other.coming && !other.going){
-				angle += Math.atan2(other.spot.x - this.spot.x, other.spot.y - this.spot.y);
+			if(other.spot.visible && !other.spot.coming && !other.spot.going){
+				angle += Math.atan2(other.spot.x - this.particle.spot.x, other.spot.y - this.particle.spot.y);
 			}
 		}
 		let offset = Math.PI * 2 / this.satelites.length;
@@ -95,6 +95,7 @@ export class Satelite{
 		this.yDirection = 0;
 	}
 	setDestinationAngle(angle){
+		console.log(angle)
 		this.destinationAngle = angle;
 		if(this.angle == null)
 			this.angle = angle;
@@ -114,6 +115,6 @@ export class Satelite{
 		this.yDirection = Math.cos(this.angle);
 	}
 	getCoordinates(){
-		return [this.particle.x + this.xDirection * this.particle.width * 0.65, this.particle.y + this.yDirection * this.particle.height * 0.65]
+		return [this.particle.spot.x + this.xDirection * this.particle.spot.width * 0.65, this.particle.spot.y + this.yDirection * this.particle.spot.height * 0.65]
 	}
 }
