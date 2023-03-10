@@ -53,9 +53,9 @@ export class Spot{
 		this.animationDuration = 1000;
 		
 		/** The natural height of the particle */
-		this.naturalHeight = spot.standardParticleWidth;
+		this.naturalHeight = spot.standardParticleWidth * spot.standardYStretch;
 		/** The natural width of the particle */
-		this.naturalWidth = spot.standardParticleWidth * spot.standardYStretch;
+		this.naturalWidth = spot.standardParticleWidth;
 		/** The scale of the paricle relative to the natural size */
 		this.scale = 0;
 	}
@@ -78,7 +78,7 @@ export class Spot{
 	 * Change the scale of the paricle if it is coming or going
 	 */
 	updateScale(){
-		time = performance.now;
+		let time = performance.now();
 		// Handle the coming or going animation scale change
 		if(this.coming){
 			this.scale = (time - this.animationStartTime) / this.animationDuration;
@@ -105,6 +105,7 @@ export class Spot{
 		}
 		else 
 			this.scale = 1;
+		console.log(this.scale)
 	}
 	
 	// Start the process of making a particle vanish
@@ -208,7 +209,7 @@ export class Spot{
 		if(!this.visible){
 			this.visible = true;
 			
-			// Define position by averaging over the satelite representation positions if there are any
+			// Define position by averaging over the satellite representation positions if there are any
 			// elsewhise set position to center
 			let [x, y] = [0, 0];
 			let number = 0;
@@ -221,7 +222,7 @@ export class Spot{
 					y += satelitePosition[1];
 				}
 			}
-			[this.x, this.y] =  number == 0 ? [this.swarm.screen.width / 2, this.swarm.screen.height / 2] : [x / number, y / number];
+			[this.x, this.y] = [this.swarm.screen.width / 2, this.swarm.screen.height / 2];// number == 0 ? [this.swarm.screen.width / 2, this.swarm.screen.height / 2] : [x / number, y / number];
 			
 			this.swarm.spot.addVisualParticle(this.particle);
 		}

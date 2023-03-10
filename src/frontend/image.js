@@ -47,8 +47,8 @@ export class ParticleImage{
 	}
 	
 	draw(time){
-		if(this.visible){
-			this.paricle.spot.updateScale();
+		if(this.particle.spot.visible){
+			this.particle.spot.updateScale();
 		}
 				
 		// Draw text bubble to buffer if necessary
@@ -80,18 +80,20 @@ export class ParticleImage{
 				this.context.fillStyle = "rgb(0,0,0)";
 				// Rescale text
 				this.context.font = 100 + "px serif";
-				var textSize = this.context.measureText(this.text);
+				var textSize = this.context.measureText(this.particle.data.text);
 				var textRelativeHeigt = (textSize.actualBoundingBoxAscent + textSize.actualBoundingBoxDescent) / (this.canvas.height - 3 * this.context.lineWidth);
 				var textRelativeWidth = textSize.width / (this.canvas.width - 3 * this.context.lineWidth);
 				var textScale = 1 / Math.sqrt(textRelativeHeigt * textRelativeHeigt + textRelativeWidth * textRelativeWidth);
 				this.context.font = (100 * textScale) + "px serif";
 				// Draw text finally
-				this.context.fillText(this.text , (this.canvas.width - textSize.width * textScale) / 2, this.canvas.height / 2 - textSize.actualBoundingBoxDescent * textScale + (textSize.actualBoundingBoxAscent + textSize.actualBoundingBoxDescent) * textScale / 2);
+				this.context.fillText(this.particle.data.text , (this.canvas.width - textSize.width * textScale) / 2, this.canvas.height / 2 - textSize.actualBoundingBoxDescent * textScale + (textSize.actualBoundingBoxAscent + textSize.actualBoundingBoxDescent) * textScale / 2);
 			}
 			
 		}
-		var ctx = this.swarm.screen.context;
-		ctx.drawImage(this.canvas, this.x - this.canvas.width * this.scale / 2, this.y - this.canvas.height * this.scale / 2, this.canvas.width * this.scale, this.canvas.height * this.scale);
+		let ctx = this.swarm.screen.context;
+		let scale = this.particle.spot.scale
+		console.log(this.particle.spot.x - this.canvas.width * this.particle.spot.scale / 2, this.y - this.canvas.height * scale / 2, this.canvas.width * scale, this.canvas.height * scale)
+		ctx.drawImage(this.canvas, this.particle.spot.x - this.canvas.width * this.particle.spot.scale / 2, this.particle.spot.y - this.canvas.height * scale / 2, this.canvas.width * scale, this.canvas.height * scale);
 		
 		ctx.fillStyle = "rgb(255,255,0)";
 		
