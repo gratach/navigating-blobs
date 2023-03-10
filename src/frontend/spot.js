@@ -10,73 +10,20 @@ export class SwarmSpot{
 	constructor(swarm, canvas){
 		this.visualParticles = [];
 		
-		this.swarm = swarm;
-		/** The canvas element */
-		this.canvas = canvas;
-		/** The context 2d of the canvas */
-		this.context = this.canvas.getContext("2d");
-		canvas.onmousedown = (e)=>{this.swarm.mouse.mouseDown(e)};
-		canvas.onmousemove = (e)=>{this.swarm.mouse.mouseMove(e)};
-		this.todonew = false;
-		canvas.onresize = ()=>{this.onResize()};
-		
-		/** The width of the canvas in pixel */
-		this.width = null;
-		
-		/** The height of the canvas in pixel */
-		this.height = null;
-		
-		/** An unique item that identifyes the current frame. This can be helpfull´ to prevent that elements are been drawn twice. */
-		this.frameItem = 0;
-		
 		this.standardParticleWidth = 150;
 		this.standardYStretch = 0.7;
-		
-		this.onResize()
 	}
 	
 	addVisualParticle(particle){
-		if(this.particles.indexOf(particle) == -1){
-			this.particles.push(particle);
+		if(this.visualParticles.indexOf(particle) == -1){
+			this.visualParticles.push(particle);
 		}
 	}
 	removeVisualParticle(particle){
-		let index = this.particles.indexOf(particle);
+		let index = this.visualParticles.indexOf(particle);
 		if(index != -1){
-			this.particles.splice(index, 1);
+			this.visualParticles.splice(index, 1);
 		}
-	}
-	
-	/**
-	 * Trigger the next frame to redraw the canvas - do nothing if the next frame has already been triggered and will happen soon
-	 */
-	refresh(){
-		if(!this.todonew){
-			this.todonew = true;
-			window.requestAnimationFrame((zeit)=>this.draw(zeit));
-		}
-	}
-	
-	onResize(){
-		this.width = window.innerWidth;
-		this.canvas.width = this.width;
-		this.height = window.innerHeight;
-		this.canvas.height = this.height;
-		this.refresh();
-	}
-	
-	draw(zeit){
-		console.log("draw")
-		this.todonew = false;
-		
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-		
-		this.swarm.dynamic.rearange();
-		this.swarm.mouse.handleMouse();
-		for(let x of this.visualParticles){
-			x.draw(zeit);
-		}
-		this.frameItem += 1;
 	}
 }
 
@@ -95,8 +42,11 @@ export class Spot{
 		/** The y position of the particle */
 		this.y = null;
 		
+		/** Bool to indicate if the particle is currently visible */
 		this.visible = false;
+		/** Bool to indicate if the particle is currently appearing */
 		this.coming = false;
+		/** Bool to indicate if the particle is currently vanishing */
 		this.going = false;
 		
 		this.animationStartTime = performance.now();
@@ -112,16 +62,49 @@ export class Spot{
 	
 	/** The total width of the particle */
 	get width(){
-		return naturalWidth * scale;
+		return this.naturalWidth * this.scale;
 	}
 	/** The total height of the particle */
 	get height(){
-		return naturalHeight * scale;
+		return this.naturalHeight * this.scale;
 	}
 	/** Set the position of the paricle without triggering anything */
 	setPosition(x, y){
 		this.x = x;
 		this.y = y;
+	}
+	
+	/**
+	 * Change the scale of the paricle if it is coming or going
+	 */
+	updateScale(){
+		time = performance.now;
+		// Handle the coming or going animation scale change
+		if(this.coming){
+			this.scale = (time - this.animationStartTime) / this.animationDuration;
+			if(this.scale < 0)
+				this.scale = 0;
+			if(this.scale >= 1){
+				this.coming = false;
+				this.scale = 1;
+			}
+			else
+				this.swarm.screen.refresh(); // Continue animation
+		}
+		else if(this.going){
+			this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
+			if(this.scale > 1)
+				this.scale = 1;
+			// Hide particle and remove from swarm if going animation is complete
+			if(this.scale <= 0){
+				this.scale = 0;
+				this.hide();
+			}
+			else
+				this.swarm.screen.refresh(); // Continue animation
+		}
+		else 
+			this.scale = 1;
 	}
 	
 	// Start the process of making a particle vanish
@@ -137,7 +120,7 @@ export class Spot{
 			this.going = true;
 			for(let link of this.particle.data.connections)
 				link.orbit.checkSatelites();
-			this.swarm.spot.refresh();
+			this.swarm.screen.refresh();
 		}
 	}
 	
@@ -155,7 +138,7 @@ export class Spot{
 			this.going = false;
 			for(let link of this.particle.data.connections)
 				link.orbit.checkSatelites();
-			this.swarm.spot.refresh();
+			this.swarm.screen.refresh();
 		}
 	}
 	
@@ -216,7 +199,7 @@ export class Spot{
 	hide(){
 		this.going = false;
 		this.visible = false;
-		this.swarm.removeVisualParticle(this);
+		this.swarm.spot.removeVisualParticle(this.particle);
 		for(let link of this.particle.data.connections)
 			link.orbit.checkSatelites();
 	}
@@ -230,7 +213,7 @@ export class Spot{
 			let [x, y] = [0, 0];
 			let number = 0;
 			for(let link of this.particle.data.connections){
-				let satelite = link.orbit.sateliteRepresentation(this);
+				let satelite = link.orbit.sateliteRepresentation(this.particle);
 				if(satelite !== null){
 					number += 1;
 					let satelitePosition = satelite.getCoordinates();
@@ -238,9 +221,9 @@ export class Spot{
 					y += satelitePosition[1];
 				}
 			}
-			[this.x, this.y] =  number == 0 ? [this.swarm.spot.width / 2, this.swarm.spot.height / 2] : [x / number, y / number];
+			[this.x, this.y] =  number == 0 ? [this.swarm.screen.width / 2, this.swarm.screen.height / 2] : [x / number, y / number];
 			
-			this.swarm.addVisualParticle(this);
+			this.swarm.spot.addVisualParticle(this.particle);
 		}
 	}
 }

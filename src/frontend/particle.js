@@ -53,7 +53,7 @@ export class Particle{
 		this.orbit = new ParticleOrbit(this, text);
 		
 		
-		this.swarm.data.addParticle.add(this);
+		this.swarm.data.addParticle(this);
 		this.image.refresh();
 	}
 }

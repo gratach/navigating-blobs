@@ -15,7 +15,7 @@ export class ParticleOrbit{
 	}
 	
 	addSatelite(link){
-		let satelite = new Satelite(this, link);
+		let satelite = new Satelite(this.particle, link);
 		this.satelites.push(satelite);
 		return satelite;
 	}
@@ -26,10 +26,10 @@ export class ParticleOrbit{
 	}
 	updateSateliteAngles(){
 		let angle = 0;
-		for(let x of this.connections){
-			let other = x.other(this)
+		for(let x of this.particle.data.connections){
+			let other = x.data.other(this.particle)
 			if(other.visible && !other.coming && !other.going){
-				angle += Math.atan2(other.x - this.x, other.y - this.y);
+				angle += Math.atan2(other.spot.x - this.spot.x, other.spot.y - this.spot.y);
 			}
 		}
 		let offset = Math.PI * 2 / this.satelites.length;
@@ -54,28 +54,30 @@ export class ArrowOrbit{
 	
 	// Manages the existance of satelites
 	checkSatelites(){
-		let fromSatelitShouldExist = this.from.visible && (!this.to.visible || this.to.coming || this.to.going);
+		let fromParticle = this.arrow.data.from;
+		let toParticle = this.arrow.data.to;
+		let fromSatelitShouldExist = fromParticle.spot.visible && (!toParticle.spot.visible || toParticle.spot.coming || toParticle.spot.going);
 		if(fromSatelitShouldExist && this.fromSatelite == null)
-			this.fromSatelite = this.from.addSatelite(this);
+			this.fromSatelite = fromParticle.orbit.addSatelite(this);
 		else if(!fromSatelitShouldExist && this.fromSatelite != null){
-			this.from.removeSatelite(this.fromSatelite);
+			fromParticle.orbit.removeSatelite(this.fromSatelite);
 			this.fromSatelite = null;
 		}
 			
-		let toSatelitShouldExist = this.to.visible && (!this.from.visible || this.from.coming || this.from.going);
+		let toSatelitShouldExist = toParticle.spot.visible && (!fromParticle.spot.visible || fromParticle.spot.coming || fromParticle.spot.going);
 		if(toSatelitShouldExist && this.toSatelite == null)
-			this.toSatelite = this.to.addSatelite(this);
+			this.toSatelite = toParticle.orbit.addSatelite(this);
 		else if(!toSatelitShouldExist && this.toSatelite != null){
-			this.to.removeSatelite(this.toSatelite);
+			toParticle.orbit.removeSatelite(this.toSatelite);
 			this.toSatelite = null;
 		}
 	}
 	
 	// Get the satelite representing this particle if anny
 	sateliteRepresentation(particle){
-		if(this.from === particle)
+		if(this.arrow.data.from === particle)
 			return this.toSatelite;
-		if(this.to === particle)
+		if(this.arrow.data.to === particle)
 			return this.fromSatelite;
 		return null;
 	}
@@ -103,7 +105,7 @@ export class Satelite{
 		let angleSpeed = this.particle.swarm.sateliteAngleSpeed;
 		if(Math.abs(gap) >= angleSpeed){
 			this.angle += gap < 0 ? angleSpeed : -angleSpeed;
-			this.particle.swarm.spot.refresh();
+			this.particle.swarm.screen.refresh();
 		}
 		else
 			this.angle = this.destinationAngle;

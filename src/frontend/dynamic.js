@@ -41,8 +41,8 @@ export class Dynamic{
 		// Add repelling force from border
 		for(let i = 0; i < this.movement.length; i++){
 			let particle = this.swarm.spot.visualParticles[i];
-			this.movement[i][0] += this.borderPotential(particle.spot.x - particle.spot.width / 2, particle.spot.scale) - this.borderPotential(this.swarm.spot.width - particle.spot.width / 2 - particle.spot.x, particle.spot.scale);
-			this.movement[i][1] += this.borderPotential(particle.spot.y - particle.spot.height / 2, particle.spot.scale) - this.borderPotential(this.swarm.spot.height - particle.spot.height / 2 - particle.spot.y, particle.spot.scale);
+			this.movement[i][0] += this.borderPotential(particle.spot.x - particle.spot.width / 2, particle.spot.scale) - this.borderPotential(this.swarm.screen.width - particle.spot.width / 2 - particle.spot.x, particle.spot.scale);
+			this.movement[i][1] += this.borderPotential(particle.spot.y - particle.spot.height / 2, particle.spot.scale) - this.borderPotential(this.swarm.screen.height - particle.spot.height / 2 - particle.spot.y, particle.spot.scale);
 		}
 		// Add repelling force between particles
 		for(let i = 0; i < this.movement.length; i++){
@@ -71,7 +71,7 @@ export class Dynamic{
 		}
 		if(keepGoing){
 			//Trigger next animation frame
-			this.swarm.spot.refresh();
+			this.swarm.screen.refresh();
 		}
 		
 		for(let x of this.swarm.spot.visualParticles)

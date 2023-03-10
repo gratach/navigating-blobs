@@ -3,14 +3,35 @@
  * @description This module implements the logic of drawing the visual elements to the canvas
  */
 
+/**
+ * Class representing the painted image of the whole canvas
+ * This class is an extension for the swarm class
+ */
+export class SwarmImage{
+	constructor(swarm, canvas){
+		this.swarm = swarm
+		
+		//drawing
+		this.lineWidth = 4;
+	}
+	/**
+	 * Draw the whole swarm to the canvas at a given time
+	 */
+	draw(zeit){
+		for(let x of this.swarm.spot.visualParticles){
+			x.image.draw(zeit);
+		}
+	}
+}
 
 /**
  * Class representing the painted image of a particle
- * This class is an extension for the particle class
+ * This class is an extension for the particle class´
  */
 export class ParticleImage{
 	constructor(particle){
 		this.particle = particle;
+		this.swarm = particle.swarm;
 		this.todonew = true;
 		this.canvas = null;
 	}
@@ -21,63 +42,38 @@ export class ParticleImage{
 	refresh(){
 		if(!this.todonew && this.swarm != null){
 			this.todonew = true;
-			this.swarm.spot.refresh();
+			this.swarm.screen.refresh();
 		}
 	}
 	
 	draw(time){
 		if(this.visible){
-			// Handle the coming or going animation scale change
-			if(this.coming){
-				this.scale = (time - this.animationStartTime) / this.animationDuration;
-				if(this.scale < 0)
-					this.scale = 0;
-				if(this.scale >= 1){
-					this.coming = false;
-					this.scale = 1;
-				}
-				else
-					this.swarm.spot.refresh(); // Continue animation
-			}
-			else if(this.going){
-				this.scale = 1 - (time - this.animationStartTime) / this.animationDuration;
-				if(this.scale > 1)
-					this.scale = 1;
-				// Hide particle and remove from swarm if going animation is complete
-				if(this.scale <= 0){
-					this.scale = 0;
-					this.hide();
-				}
-				else
-					this.swarm.spot.refresh(); // Continue animation
-			}
-			else 
-				this.scale = 1;
+			this.paricle.spot.updateScale();
 		}
 				
 		// Draw text bubble to buffer if necessary
 		if(this.todonew){
 			this.todonew = false;
 			
-			if(this.visible){
+			if(this.particle.spot.visible){
 				
 		
 				// Create buffer if necessary
-				if(this.canvas == null || this.canvas.width != this.bufferWidth || this.canvas.height != this.bufferHeight){
+				if(this.canvas == null || this.canvas.width != this.particle.spot.naturalWidth || this.canvas.height != this.particle.spot.naturalHeight){
 					this.canvas = document.createElement("canvas");
-					this.canvas.width = this.bufferWidth;
-					this.canvas.height = this.bufferHeight;
+					this.canvas.width = this.particle.spot.naturalWidth;
+					this.canvas.height = this.particle.spot.naturalHeight;
 					this.context = this.canvas.getContext("2d");
 				}
 				
 				
 				// Draw elipse to buffer
-				this.context.lineWidth = this.swarm.lineWidth;
+				this.context.lineWidth = this.swarm.image.lineWidth;
 				this.context.fillStyle = this.particle.mouse.hover ? "rgb(0,255,0)" : "rgb(100,100,255)";
 				this.context.beginPath();
 				this.context.ellipse(this.canvas.width / 2, this.canvas.height / 2, (this.canvas.width - this.context.lineWidth) / 2, (this.canvas.height - this.context.lineWidth) / 2, 0, 0, 2 * Math.PI);
 				this.context.fill();
-				this.context.strokeStyle = this.focus.focused ? "rgb(255,0,0)" : "rgb(0,0,0)"
+				this.context.strokeStyle = this.particle.focus.focused ? "rgb(255,0,0)" : "rgb(0,0,0)"
 				this.context.stroke();
 				
 				// Draw text to buffer
@@ -94,19 +90,15 @@ export class ParticleImage{
 			}
 			
 		}
-		var ctx = this.swarm.spot.context;
+		var ctx = this.swarm.screen.context;
 		ctx.drawImage(this.canvas, this.x - this.canvas.width * this.scale / 2, this.y - this.canvas.height * this.scale / 2, this.canvas.width * this.scale, this.canvas.height * this.scale);
 		
 		ctx.fillStyle = "rgb(255,255,0)";
 		
 		
 		// Draw all the links conecting to this particle
-		for(let x of this.connections)
-			x.draw(time);
-	}
-	
-	get bufferHeight(){
-		return Math.round(this.bufferWidth * this.swarm.yStretch);
+		for(let x of this.particle.data.connections)
+			x.image.draw(time);
 	}
 }
 
@@ -118,6 +110,7 @@ export class ParticleImage{
 export class ArrowImage{
 	constructor(arrow){
 		this.arrow = this.arrow;
+		this.swarm = arrow.swarm;
 	}
 	draw(zeit){
 		
@@ -128,7 +121,7 @@ export class ArrowImage{
 			var ctx = this.swarm.spot.context;
 			ctx.beginPath();
 			let scaleMin = Math.min(this.to.scale, this.from.scale);
-			ctx.lineWidth = this.swarm.lineWidth * scaleMin;
+			ctx.lineWidth = this.swarm.image.lineWidth * scaleMin;
 			
 			let [[fromX, fromY], [toX, toY]] = this.from.closestPoints(this.to);
 			
@@ -160,7 +153,7 @@ export class ArrowImage{
 			}
 			
 			if(sateliteWidth != 0){
-				let sateliteHeight = sateliteWidth * this.swarm.yStretch;
+				let sateliteHeight = sateliteWidth * this.swarm.spot.standardYStretch;
 				ctx.fillStyle = "rgb(0,0,0)";
 				ctx.ellipse(satX, satY, sateliteWidth / 2, sateliteHeight / 2, 0, 0, 2 * Math.PI);
 				ctx.fill();

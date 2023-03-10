@@ -9,6 +9,8 @@ import {Dynamic} from "./dynamic.js"
 import {SwarmMouseHandler} from "./mouse.js"
 import {SwarmSpot} from "./spot.js"
 import {SwarmData} from "./data.js"
+import {SwarmScreen} from "./screen.js"
+import {SwarmImage} from "./image.js"
 
 /**
  * Container class for all logic that is necessary to handle a group of particles linked by arrows, draw them to screen and manage user interaction
@@ -52,14 +54,24 @@ export class Swarm{
 		 */
 		this.mouse = new SwarmMouseHandler(this);
 		
+		/** Implements logic for canvas beeing handled
+		 * @see SwarmScreen
+		 */
+		this.screen = new SwarmScreen(this, canvas);
+		
+		/** Implements logic for content beeing drawn to the canvas
+		 * @see SwarmMouseHandler
+		 */
+		this.image = new SwarmImage(this);
+		
 		/** Implements logic for mouse events beeing handled
 		 * @see SwarmMouseHandler
 		 */
-		this.spot = new SwarmSpot(this, canvas);
+		this.spot = new SwarmSpot(this);
 		
 		/** Implements logic for handling of the semantic web
 		 * @see SwarmData
 		 */
-		this.data = new SwarmData(this, canvas);
+		this.data = new SwarmData(this);
 	}
 }

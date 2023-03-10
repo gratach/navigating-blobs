@@ -41,7 +41,7 @@ export class SwarmFocus{
 		let index = this.newAnalyzationIndex();
 		for(let x of this.focusedParticles)
 			this.analyzeLayer(x, 0, x, index);
-		for(let x of this.swarm.allParticles){
+		for(let x of this.swarm.data.allParticles){
 			if(x.focus.analyzationIndex != index){
 				x.focus.distance = -1;
 				x.focus.closestFocus = null;

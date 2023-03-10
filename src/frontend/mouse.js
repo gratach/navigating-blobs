@@ -74,9 +74,9 @@ export class SwarmMouseHandler{
 	}
 	
 	mouseEvent(e, click = false, doubleclick = false){
-		let rect = this.swarm.spot.canvas.getBoundingClientRect();
-		this.x = (e.clientX - rect.left) * this.swarm.spot.canvas.width / rect.width;
-		this.y = (e.clientY - rect.top) * this.swarm.spot.canvas.height / rect.height;
+		let rect = this.swarm.screen.canvas.getBoundingClientRect();
+		this.x = (e.clientX - rect.left) * this.swarm.screen.canvas.width / rect.width;
+		this.y = (e.clientY - rect.top) * this.swarm.screen.canvas.height / rect.height;
 		this.clicked = click;
 		this.doubleclicked = doubleclick;
 		this.internally = true;
