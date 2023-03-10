@@ -95,7 +95,6 @@ export class Satelite{
 		this.yDirection = 0;
 	}
 	setDestinationAngle(angle){
-		console.log(angle)
 		this.destinationAngle = angle;
 		if(this.angle == null)
 			this.angle = angle;

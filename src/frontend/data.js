@@ -43,7 +43,7 @@ export class ParticleData{
 	 */
 	connectedWith(neighbor){
 		for(let connection of this.connections)
-			if(connection.from === neighbor || connection.to === neighbor)
+			if(connection.data.from === neighbor || connection.data.to === neighbor)
 				return true;
 		return false;
 	}

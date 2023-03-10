@@ -19,7 +19,7 @@
 		this.context = this.canvas.getContext("2d");
 		canvas.onmousedown = (e)=>{this.swarm.mouse.mouseDown(e)};
 		canvas.onmousemove = (e)=>{this.swarm.mouse.mouseMove(e)};
-		window.onresize = ()=>{console.log("test"); this.onResize()};
+		window.onresize = ()=>{this.onResize()};
 		
 		/** The width of the canvas in pixel */
 		this.width = null;
