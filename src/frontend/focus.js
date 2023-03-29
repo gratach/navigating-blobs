@@ -61,6 +61,7 @@ export class SwarmFocus{
 	}
 	//set focus value of particle to true or false
 	setFocus(particle, focusValue, analyze = true){
+		console.log(particle.data.text)
 		if(this.focused != focusValue){
 			if(focusValue){
 				this.focusedParticles.push(particle);

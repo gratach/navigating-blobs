@@ -9,45 +9,91 @@ import {Dynamik} from "./frontend/dynamic.js"
 
 var l = new Picture();
 var h = new Swarm(l.canvas);
-var p1 = new Particle(h, "Hallo, Das");
-var p2 = new Particle(h, "ist ein");
-var p3 = new Particle(h, "Test");
-var p4 = new Particle(h, "und");
-var p5 = new Particle(h, "er");
-var p6 = new Particle(h, "geht");
-var p7 = new Particle(h, "noch");
-var p8 = new Particle(h, "weiter");
-var p9 = new Particle(h, "!");
-var l1 = new Arrow(p1, p2);
-var l2 = new Arrow(p2, p3);
-var l3 = new Arrow(p3, p4);
-var l4 = new Arrow(p4, p5);
-var l5 = new Arrow(p5, p6);
-var l6 = new Arrow(p6, p7);
-var l7 = new Arrow(p7, p8);
-var l8 = new Arrow(p8, p9);
-var p5 = new Particle(h, "A");
-var p6 = new Particle(h, "B");
-var p7 = new Particle(h, "C");
-var p8 = new Particle(h, "D");
-var p9 = new Particle(h, "E");
-var l5 = new Arrow(p5, p6);
-var l6 = new Arrow(p6, p7);
-var l7 = new Arrow(p7, p8);
-var l8 = new Arrow(p7, p9);
-new Arrow(p9, p3)
-var p5 = new Particle(h, "er");
-var p6 = new Particle(h, "geht");
-var p7 = new Particle(h, "noch");
-var p8 = new Particle(h, "weiter?");
-var p9 = new Particle(h, "weiter!");
-var l5 = new Arrow(p5, p6);
-var l6 = new Arrow(p6, p7);
-var l7 = new Arrow(p7, p8);
-var l8 = new Arrow(p7, p9);
-new Arrow(p7, p2)
-new Arrow(p8, p3)
-h.focus.setFocus(p1, true)
+var debablo = new Particle(h, "Debablo");
+
+var klick = new Particle(h, "Klicken");
+new Arrow(debablo, klick);
+var fokuswechsel = new Particle(h, "-> Fokus ändern");
+new Arrow(klick, fokuswechsel);
+
+var doppelklick = new Particle(h, "Doppelklicken");
+new Arrow(debablo, doppelklick);
+var fokusneu = new Particle(h, "-> neuer Fokus");
+new Arrow(doppelklick, fokusneu);
+
+var netz = new Particle(h, "Semantisches Netz");
+new Arrow(debablo, netz);
+var semantik = new Particle(h, "Didaktik");
+new Arrow(netz, semantik);
+var link = new Particle(h, "Verknüpfungen");
+new Arrow(netz, link);
+var knoten = new Particle(h, "Knotenpunkte");
+new Arrow(netz, knoten);
+
+var graph = new Particle(h, "Mathematischer Graph");
+new Arrow(netz, graph);
+var mathematik = new Particle(h, "Mathematik");
+new Arrow(graph, mathematik);
+
+var disziplinen = new Particle(h, "Disziplinen");
+new Arrow(semantik, disziplinen);
+new Arrow(mathematik, disziplinen);
+
+var physik = new Particle(h, "Physik");
+new Arrow(physik, disziplinen);
+var informatik = new Particle(h, "Informatik");
+new Arrow(informatik, disziplinen);
+
+var programmieren = new Particle(h, "Programmieren");
+new Arrow(informatik, programmieren);
+var software = new Particle(h, "Software");
+new Arrow(programmieren, software);
+
+var webanwendung = new Particle(h, "Webanwendung");
+new Arrow(software, webanwendung);
+new Arrow(debablo, webanwendung);
+var backend = new Particle(h, "Backend");
+new Arrow(backend, webanwendung);
+var frontend = new Particle(h, "Frontend");
+new Arrow(frontend, webanwendung);
+
+var computer = new Particle(h, "Computer");
+new Arrow(informatik, computer);
+var server = new Particle(h, "Server");
+new Arrow(server, computer);
+new Arrow(server, backend);
+
+var browser = new Particle(h, "Browser");
+new Arrow(frontend, browser);
+new Arrow(software, browser);
+
+var internet = new Particle(h, "Internet");
+new Arrow(webanwendung, internet);
+var daten = new Particle(h, "Daten");
+new Arrow(daten, internet);
+
+var strom = new Particle(h, "Strom");
+new Arrow(strom, computer);
+new Arrow(strom, physik);
+
+var hardware = new Particle(h, "Hardware");
+new Arrow(computer, hardware);
+new Arrow(software, hardware);
+
+var bildschirm = new Particle(h, "Bildschirm");
+new Arrow(bildschirm, hardware);
+var maus = new Particle(h, "Maus");
+new Arrow(maus, hardware);
+new Arrow(maus, klick);
+new Arrow(maus, doppelklick);
+var tastatur = new Particle(h, "Tastatur");
+new Arrow(tastatur, hardware);
+
+
+
+
+
+h.focus.setFocus(debablo, true);
 // z.ebenen.push(
 // 	(ctx, w, h, zeit) => {
 // 		ctx.fillRect(w / 3, h / 3, w / 3, h / 3);

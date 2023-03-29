@@ -1,2 +1,2 @@
 #!/bin/bash
-jsdoc -r -d doc src
+jsdoc -R README.md -r -d doc src

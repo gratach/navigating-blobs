@@ -10,7 +10,7 @@ export class Plow{
 	constructor(swarm){
 		this.swarm = swarm;
 		/** The maximal particle number */
-		this.maxParticles = 10;
+		this.maxParticles = 12;
 		this.waitForPlowing = false;
 		this.totalCount = null;
 	}
@@ -37,7 +37,7 @@ export class Plow{
 			else{
 				if(x.focus.distance > this.farthestOut)
 					this.farthestOut = x.focus.distance;
-				if(x.focus.distance < this.closestOut)
+				if(x.focus.distance != -1 && x.focus.distance < this.closestOut)
 					this.closestOut = x.focus.distance;
 			}
 		}
@@ -50,7 +50,7 @@ export class Plow{
 		// remove all particles that are unconnected to focus
 		for(let x of this.swarm.spot.visualParticles){
 			if(x.spot.solid && x.focus.distance == -1){
-				spot.vanish();
+				x.spot.vanish();
 				this.totalCount -= 1;
 			}
 		}
@@ -79,6 +79,7 @@ export class Plow{
 		}
 		
 		//add particles to lowest layer if necessary
+		console.log(this.closestOut)
 		for(let x of this.swarm.data.allParticles){
 			if(this.totalCount >= this.maxParticles){
 				this.closestOut -= 1;
